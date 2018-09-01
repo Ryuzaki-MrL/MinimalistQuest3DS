@@ -1,0 +1,18 @@
+#ifndef PROPERTIES_H
+#define PROPERTIES_H
+
+enum {
+	PROPERTY_SOLID		= (1 <<  0),
+	PROPERTY_SHOWDIR	= (1 <<  1),
+	PROPERTY_WEIGHT		= (1 <<  2),
+	PROPERTY_PICKABLE	= (1 <<  3),
+	PROPERTY_PERSISTENT	= (1 <<  4),
+	PROPERTY_GHOST		= (1 <<  5),
+	PROPERTY_DAMAGEABLE	= (1 <<  6),
+	PROPERTY_SPRTRSAVE	= (1 <<  7),
+	PROPERTY_ENEMY		= (1 <<  8),
+	PROPERTY_WEAPON		= (1 <<  9),
+	PROPERTY_INTERACT	= (1 << 10)
+};
+
+#endif /* PROPERTIES_H */

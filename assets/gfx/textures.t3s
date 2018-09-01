@@ -1,0 +1,3 @@
+--atlas -f rgba8888 -z auto
+bg_floor.png
+map.png
