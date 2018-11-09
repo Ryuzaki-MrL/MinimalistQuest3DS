@@ -9,7 +9,7 @@ struct SprTrData {
 	int8_t yscale = 1;
 };
 
-class RenderEngine;
+class Renderer;
 struct SpriteComponent {
 	Color color;
 	SprTrData tr;
@@ -23,8 +23,9 @@ struct SpriteComponent {
 	SpriteComponent(Sprite spr = SPR_NONE, int8_t steps = 0): color(0xFF000000), steps(steps), frame(0), sprite(spr) {}
 
 	void update();
-	void draw(float x, float y, RenderEngine& render);
+	void draw(float x, float y, Renderer& render);
 
+	// TODO: apply scale and rotation
 	inline const Rectangle& getBoundingBox() const { return spriteGet(sprite)->bbox; }
 };
 

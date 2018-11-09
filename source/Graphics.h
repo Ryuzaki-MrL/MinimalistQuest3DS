@@ -19,8 +19,9 @@ enum Font: uint8_t {
 	MAX_FONT
 };
 
-class RenderEngine {
+class Renderer {
   private:
+	// TODO: move this to a RenderContext platform-specific struct
 	float tx, ty;
 	C3D_RenderTarget* top;
 	C3D_RenderTarget* right;
@@ -32,17 +33,17 @@ class RenderEngine {
 	C2D_TextBuf internalbuf;
 
   public:
-	RenderEngine();
-	~RenderEngine();
+	Renderer();
+	~Renderer();
 
 	void frameStart();
-	void renderTargetScreen(gfxScreen_t screen, gfx3dSide_t side = GFX_LEFT);
+	void setTargetScreen(gfxScreen_t screen, gfx3dSide_t side = GFX_LEFT);
 	float get3D();
 	void frameEnd();
 
 	void screenClear(u32 color);
+	void screenBlend(u32 color);
 	void screenTranslate(float x, float y);
-	// TODO: screenTint for C2D_Fade (and use it to darken the screen a bit during 3D)
 
 	void drawRectangle(float x, float y, float w, float h, u32 color);
 	void drawSprite(uint8_t id, float x, float y);

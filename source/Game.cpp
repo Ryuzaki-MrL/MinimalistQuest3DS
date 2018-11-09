@@ -34,14 +34,14 @@ void Game::setState(GameState* newstate) {
 void Game::draw() {
 	render.frameStart();
 
-	render.renderTargetScreen(GFX_TOP);
+	render.setTargetScreen(GFX_TOP);
 	state->drawTop(render);
 	if (render.get3D() != 0.0) {
-		render.renderTargetScreen(GFX_TOP, GFX_RIGHT);
+		render.setTargetScreen(GFX_TOP, GFX_RIGHT);
 		state->drawTop(render);
 	}
 
-	render.renderTargetScreen(GFX_BOTTOM);
+	render.setTargetScreen(GFX_BOTTOM);
 	state->drawBottom(render);
 
 	render.frameEnd();

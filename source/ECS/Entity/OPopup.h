@@ -3,6 +3,6 @@
 
 #include "EntityDef.h"
 
-NEWENTITY(OPopup, OBJ_POPUP, onUpdate(), onDraw(RenderEngine& render))
+NEWENTITY(OPopup, OBJ_POPUP, onUpdate(), onDraw(Renderer& render))
 
 #endif /* OPOPUP_H */

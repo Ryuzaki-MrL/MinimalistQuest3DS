@@ -19,7 +19,7 @@ void OPopup::onUpdate() {
 	}
 }
 
-void OPopup::onDraw(RenderEngine& render) {
+void OPopup::onDraw(Renderer& render) {
 	render.screenTranslate(-render.get3D(), 0);
 	render.drawText(FNT_ARIAL9, pos.x, pos.y, 1.0f, spr.color.rgba, true, messageGet(loot.type));
 	render.screenTranslate(render.get3D(), 0);

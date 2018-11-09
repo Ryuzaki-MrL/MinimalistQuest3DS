@@ -12,8 +12,8 @@ class STitleScreen: public GameState {
 	~STitleScreen();
 
 	void update();
-	void drawTop(RenderEngine& render);
-	void drawBottom(RenderEngine& render);
+	void drawTop(Renderer& render);
+	void drawBottom(Renderer& render);
 };
 
 #endif /* TITLESCREEN_H */

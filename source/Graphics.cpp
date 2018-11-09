@@ -29,7 +29,7 @@ static void cacheTextForRendering(const char* str) {
 	C2D_TextOptimize(&txtready[str]);
 }
 
-RenderEngine::RenderEngine(): tx(0), ty(0) {
+Renderer::Renderer(): tx(0), ty(0) {
 	gfxInit(GSP_BGR8_OES, GSP_BGR8_OES, true);
 	gfxSet3D(true);
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
@@ -40,6 +40,7 @@ RenderEngine::RenderEngine(): tx(0), ty(0) {
 	right = C2D_CreateScreenTarget(GFX_TOP, GFX_RIGHT);
 	bot = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 
+	// TODO: separate textures from render engine
 	texturesheet = C2D_SpriteSheetLoad("romfs:/textures.t3x");
 	spritesheet = C2D_SpriteSheetLoad("romfs:/sprites.t3x");
 	tileset = C2D_SpriteSheetLoad("romfs:/tileset.t3x");
@@ -51,7 +52,7 @@ RenderEngine::RenderEngine(): tx(0), ty(0) {
 	}
 }
 
-RenderEngine::~RenderEngine() {
+Renderer::~Renderer() {
 	C2D_TextBufDelete(internalbuf);
 	C2D_SpriteSheetFree(texturesheet);
 	C2D_SpriteSheetFree(spritesheet);
@@ -66,12 +67,12 @@ RenderEngine::~RenderEngine() {
 	gfxExit();
 }
 
-void RenderEngine::frameStart() {
+void Renderer::frameStart() {
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 	C2D_TextBufClear(internalbuf);
 }
 
-void RenderEngine::renderTargetScreen(gfxScreen_t screen, gfx3dSide_t side) {
+void Renderer::setTargetScreen(gfxScreen_t screen, gfx3dSide_t side) {
 	if (screen == GFX_TOP) {
 		C2D_SceneBegin(currtarg = ((side==GFX_LEFT) ? top : right));
 		s_3dside = (side==GFX_LEFT) ? -1.0 : 1.0;
@@ -80,31 +81,36 @@ void RenderEngine::renderTargetScreen(gfxScreen_t screen, gfx3dSide_t side) {
 	}
 }
 
-float RenderEngine::get3D() {
+float Renderer::get3D() {
 	return osGet3DSliderState() * s_3dside;
 }
 
-void RenderEngine::frameEnd() {
+void Renderer::frameEnd() {
 	C3D_FrameEnd(0);
 }
 
-void RenderEngine::screenClear(u32 color) {
-	C2D_TargetClear(currtarg, color);
+void Renderer::screenClear(u32 color) {
+	//C2D_TargetClear(currtarg, color);
+	drawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color);
 }
 
-void RenderEngine::screenTranslate(float x, float y) {
+void Renderer::screenBlend(u32 color) {
+	C2D_Fade(color);
+}
+
+void Renderer::screenTranslate(float x, float y) {
 	tx += x; ty += y;
 }
 
-void RenderEngine::drawRectangle(float x, float y, float w, float h, u32 color) {
+void Renderer::drawRectangle(float x, float y, float w, float h, u32 color) {
 	C2D_DrawRectSolid(x - tx, y - ty, 0.0f, w, h, color);
 }
 
-void RenderEngine::drawSprite(uint8_t id, float x, float y) {
+void Renderer::drawSprite(uint8_t id, float x, float y) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(spritesheet, id), x - tx, y - ty, 0.0f);
 }
 
-void RenderEngine::drawSpriteExt(uint8_t id, float x, float y, float xorig, float yorig, float xscale, float yscale, float angle, u32 color) {
+void Renderer::drawSpriteExt(uint8_t id, float x, float y, float xorig, float yorig, float xscale, float yscale, float angle, u32 color) {
 	C2D_PlainImageTint(&s_tint, color, 0.0f);
 	C2D_Image img = C2D_SpriteSheetGetImage(spritesheet, id);
 	C2D_DrawParams params = {
@@ -115,20 +121,20 @@ void RenderEngine::drawSpriteExt(uint8_t id, float x, float y, float xorig, floa
 	C2D_DrawImage(img, &params, &s_tint);
 }
 
-void RenderEngine::drawTile(uint8_t id, int x, int y) {
+void Renderer::drawTile(uint8_t id, int x, int y) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(tileset, id), x - tx, y - ty, 0.0f);
 }
 
-void RenderEngine::drawTexture(Texture id, int x, int y) {
+void Renderer::drawTexture(Texture id, int x, int y) {
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(texturesheet, id), x, y, 0.0f);
 }
 
-void RenderEngine::drawTextureColor(Texture id, int x, int y, u32 color, float blend) {
+void Renderer::drawTextureColor(Texture id, int x, int y, u32 color, float blend) {
 	C2D_PlainImageTint(&s_tint, color, blend);
 	C2D_DrawImageAt(C2D_SpriteSheetGetImage(texturesheet, id), x, y, 0.0f, &s_tint);
 }
 
-void RenderEngine::drawTextureFill(Texture id) {
+void Renderer::drawTextureFill(Texture id) {
 	C2D_Image img = C2D_SpriteSheetGetImage(texturesheet, id);
 	int txi = tx, tyi = ty;
 	for (u16 x = 0; x <= SCREEN_WIDTH; x += img.subtex->width) {
@@ -138,7 +144,7 @@ void RenderEngine::drawTextureFill(Texture id) {
 	}
 }
 
-void RenderEngine::drawText(Font font, float x, float y, float size, u32 color, bool center, const char* str) {
+void Renderer::drawText(Font font, float x, float y, float size, u32 color, bool center, const char* str) {
 	if (!fonts[font]) {
 		float w;
 		if (!txtready.count(str)) cacheTextForRendering(str);
@@ -149,7 +155,7 @@ void RenderEngine::drawText(Font font, float x, float y, float size, u32 color, 
 	}
 }
 
-void RenderEngine::drawTextFormat(Font font, float x, float y, float size, u32 color, bool center, const char* str, ...) {
+void Renderer::drawTextFormat(Font font, float x, float y, float size, u32 color, bool center, const char* str, ...) {
 	static char buffer[256] = "";
 	va_list args;
 	va_start(args, str);

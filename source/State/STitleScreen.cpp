@@ -36,7 +36,7 @@ void STitleScreen::update() {
 	}
 }
 
-void STitleScreen::drawTop(RenderEngine& render) {
+void STitleScreen::drawTop(Renderer& render) {
 	static uint8_t sblend = 0;
 	static bool revblend = false;
 	const uint8_t incb = 10 / (1 + (render.get3D() != 0.0));
@@ -58,7 +58,7 @@ void STitleScreen::drawTop(RenderEngine& render) {
 	render.drawText(FNT_DEFAULT, 0, 240-16, 0.5f, C_BLACK, false, COPY_INFO);
 }
 /*
-static void drawContinueScreen(RenderEngine& render, const SaveData& sv) {
+static void drawContinueScreen(Renderer& render, const SaveData& sv) {
 	if (!sv.isValid()) {
 		render.drawText(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, MSG_CONTINUE_NOSAVE);
 	} else {
@@ -66,15 +66,15 @@ static void drawContinueScreen(RenderEngine& render, const SaveData& sv) {
 	}
 }
 
-static void drawNewGameScreen(RenderEngine& render) {
+static void drawNewGameScreen(Renderer& render) {
 	render.drawText(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, MSG_NEWGAME_DESC);
 }
 
-static void drawGameQuitScreen(RenderEngine& render) {
+static void drawGameQuitScreen(Renderer& render) {
 	render.drawText(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, MSG_QUITGAME_DESC);
 }
 */
-void STitleScreen::drawBottom(RenderEngine& render) {
+void STitleScreen::drawBottom(Renderer& render) {
 	render.screenClear(C_WHITE);
 	/*
 	switch(selected) {

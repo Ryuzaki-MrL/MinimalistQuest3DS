@@ -76,7 +76,7 @@ void SMainGame::update() {
 	}
 }
 
-void SMainGame::drawTop(RenderEngine& render) {
+void SMainGame::drawTop(Renderer& render) {
 	level.draw(render);
 	if (paused) {
 		render.drawRectangle(0, 0, 400, 240, RGBA8(0,0,0,0x7F));
@@ -84,8 +84,7 @@ void SMainGame::drawTop(RenderEngine& render) {
 	}
 }
 
-static void drawMapScreen(const Level& level, RenderEngine& render) {
-	render.drawTexture(TEX_MAP, 51, 89);
+static void drawMapScreen(const Level& level, Renderer& render) {
 	const MapData& mp = level.getWorldData().map;
 	if (!mp.hasmap) {
 		render.drawRectangle(51, 89, 217, 144, C_BLACK);
@@ -103,7 +102,7 @@ static void drawMapScreen(const Level& level, RenderEngine& render) {
 	render.drawSpriteExt(sprites_spr_player_0_idx, 51+24*(sc%9)+8, 124+18*(sc/9)+6, 0, 0, 0.5f, 0.5f, 0, C_BLACK);
 }
 
-static void drawControlScreen(RenderEngine& render, const Level& level, const Game& game) {
+static void drawControlScreen(Renderer& render, const Level& level, const Game& game) {
 	//render.drawText(FNT_DEFAULT, 160, 96, 0.75f, C_BLACK, true, messageGet("msg_chelp"));
 	u32 memuse = 33554432 - linearSpaceFree();
 	render.drawTextFormat(FNT_DEFAULT, 160, 88, 0.5f, RGBA8(0xFF,0,0,0xFF), true,
@@ -116,7 +115,7 @@ static void drawControlScreen(RenderEngine& render, const Level& level, const Ga
 	);
 }
 
-static void drawInventoryScreen(const InventoryData& inv, RenderEngine& render) {
+static void drawInventoryScreen(const InventoryData& inv, Renderer& render) {
 	render.drawText(FNT_DEFAULT, 8, 96, 0.75f, C_BLACK, false, messageGet(MSG_WEAPON));
 	for (int i = 0; i < WEAPON_COUNT; ++i) {
 		render.drawRectangle(i*80+20, 120, 40, 40, RGBA8(0xFF*(inv.curweapon==i),0,0,0xFF));
@@ -131,7 +130,7 @@ static void drawInventoryScreen(const InventoryData& inv, RenderEngine& render) 
 	}
 }
 
-void SMainGame::drawBottom(RenderEngine& render) {
+void SMainGame::drawBottom(Renderer& render) {
 	static char hpbuf[30];
 	render.screenClear(C_WHITE);
 	const WorldData& wd = level.getWorldData();

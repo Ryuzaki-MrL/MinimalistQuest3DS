@@ -114,7 +114,7 @@ void GameEntity::update() {
 	onUpdate();
 }
 
-void GameEntity::draw(RenderEngine& render) {
+void GameEntity::draw(Renderer& render) {
 	if (hasProperty(PROPERTY_SHOWDIR)) spr.tr.angle = mv.direction; // temporary hack
 	spr.draw(pos.x, pos.y, render);
 	if ((hasProperty(PROPERTY_DAMAGEABLE)) && (curstats.chp < curstats.mhp)) {

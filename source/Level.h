@@ -78,7 +78,7 @@ class Level {
 	void collisionHandle(const Rectangle& bbox, GameEntity& me, CollisionFn colfn);
 
 	void update();
-	void draw(RenderEngine& render);
+	void draw(Renderer& render);
 };
 
 #endif /* LEVEL_H */

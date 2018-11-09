@@ -6,10 +6,10 @@
 class GameState;
 class Game {
   private:
-	RenderEngine render;
 	GameState* state;
 	bool running;
 	u64 framecnt, lasttime;
+	Renderer render;
 	float fps;
 
   public:

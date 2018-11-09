@@ -1,7 +1,7 @@
 #ifndef TEXTBOX_H
 #define TEXTBOX_H
 
-class RenderEngine;
+class Renderer;
 class Textbox {
   private:
 	char buf[256];
@@ -18,7 +18,7 @@ class Textbox {
 
 	void setText(const char* str);
 	bool update();
-	bool draw(RenderEngine& render);
+	bool draw(Renderer& render);
 };
 
 void textboxCreate(const char* str);

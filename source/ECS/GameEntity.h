@@ -8,7 +8,7 @@
 #include "Properties.h"
 
 class Level;
-class RenderEngine;
+class Renderer;
 class GameEntity: public ISerializable {
   protected:
 	SpriteComponent spr;
@@ -30,7 +30,7 @@ class GameEntity: public ISerializable {
 
   private:
 	virtual void onUpdate() {}
-	virtual void onDraw(RenderEngine&) {}
+	virtual void onDraw(Renderer&) {}
 
 	virtual void onKill() {}
 
@@ -78,7 +78,7 @@ class GameEntity: public ISerializable {
 	inline bool collideWith(const GameEntity& obj) const { return obj.collideWith(getBoundingBox()); }
 
 	void update();
-	void draw(RenderEngine& render);
+	void draw(Renderer&);
 
 	void serialize(FILE* out) const;
 	void deserialize(FILE* in);

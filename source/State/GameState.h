@@ -12,8 +12,8 @@ class GameState {
 	virtual ~GameState() {}
 
 	virtual void update() = 0;
-	virtual void drawTop(RenderEngine&) {}
-	virtual void drawBottom(RenderEngine&) {}
+	virtual void drawTop(Renderer&) {}
+	virtual void drawBottom(Renderer&) {}
 };
 
 #endif /* GAMESTATE_H */

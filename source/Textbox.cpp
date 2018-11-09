@@ -39,7 +39,7 @@ bool Textbox::update() {
 	return true;
 }
 
-bool Textbox::draw(RenderEngine& render) {
+bool Textbox::draw(Renderer& render) {
 	if (!active) return false;
 	render.drawRectangle(0, 0, 320, 48, C_BLACK);
 	render.drawText(FNT_SQUARE, 0, 0, 1.0f, C_WHITE, false, buf);

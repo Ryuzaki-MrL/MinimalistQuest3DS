@@ -9,7 +9,7 @@ void SpriteComponent::update() {
 	}
 }
 
-void SpriteComponent::draw(float x, float y, RenderEngine& render) {
+void SpriteComponent::draw(float x, float y, Renderer& render) {
 	const SpriteData* spr = spriteGet(sprite);
 	render.drawSpriteExt(spriteGetTexture(sprite, frame), x, y, spr->xorig, spr->yorig, tr.xscale, tr.yscale, tr.angle, color.rgba);
 }

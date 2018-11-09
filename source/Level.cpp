@@ -149,9 +149,9 @@ void Level::update() {
 	camera.update(player.getX(), player.getY());
 }
 
-void Level::draw(RenderEngine& render) {
+void Level::draw(Renderer& render) {
 	render.screenClear(C_WHITE);
-	// 3d depth order: background -> tilemap -> sprites
+	// depth order: bg -> tilemap -> sprites
 	float threedee = render.get3D() * 2.0;
 	render.screenTranslate(camera.getX() - 40 + threedee, camera.getY());
 	render.drawTextureFill(TEX_BACKGROUND);
