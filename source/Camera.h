@@ -5,9 +5,10 @@
 
 class Camera {
   private:
+	Rectangle lim;
 	int x, y, xspd, yspd;
 	int xorig, yorig;
-	Rectangle lim;
+	bool locked;
 
   public:
 	Camera();
@@ -22,6 +23,7 @@ class Camera {
 	inline bool isScrolling() const { return xspd || yspd; }
 	inline int getX() const { return x; }
 	inline int getY() const { return y; }
+	inline void setLock(bool lock) { locked = lock; }
 
 	void update(int px, int py);
 };

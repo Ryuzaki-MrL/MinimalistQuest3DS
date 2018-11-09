@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "defs.h"
 
-Camera::Camera(): x(0), y(0), xorig(SUBSCREEN_WIDTH/2), yorig(SCREEN_HEIGHT/2) {}
+Camera::Camera(): x(0), y(0), xorig(SUBSCREEN_WIDTH/2), yorig(SCREEN_HEIGHT/2), locked(false) {}
 Camera::~Camera() {}
 
 void Camera::update(int px, int py) {
@@ -12,7 +12,7 @@ void Camera::update(int px, int py) {
 		if (x >= lim.left && x <= limx && y >= lim.top && y <= limy) {
 			xspd = yspd = 0;
 		}
-	} else {
+	} else if (!locked) {
 		int newx = px - xorig;
 		int newy = py - yorig;
 		x = clamp(newx, lim.left, limx);
