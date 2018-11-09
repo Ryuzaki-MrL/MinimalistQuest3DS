@@ -65,7 +65,7 @@ const SaveProfile& currentSaveProfile() {
 	return g_save.getProfile(g_slot);
 }
 
-void selectSavedata(uint8_t slot) {
+void selectSaveProfile(uint8_t slot) {
 	g_slot = slot % MAX_PROFILES;
 }
 

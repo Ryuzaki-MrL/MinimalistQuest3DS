@@ -41,7 +41,7 @@ class SaveData {
 SaveData& getGlobalSavedata();
 bool commitGlobalSavedata();
 const SaveProfile& currentSaveProfile();
-void selectSavedata(uint8_t slot);
+void selectSaveProfile(uint8_t slot);
 void loadCurrentSavedata(WorldData& out);
 void commitCurrentSavedata(const WorldData& world);
 

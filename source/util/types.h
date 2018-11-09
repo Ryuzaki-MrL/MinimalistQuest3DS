@@ -21,6 +21,7 @@ struct Rectangle {
 };
 
 union Color {
+	Color() {}
 	Color(uint32_t rgba): rgba(rgba) {}
 	uint32_t rgba;
 	struct c {

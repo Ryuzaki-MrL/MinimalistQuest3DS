@@ -16,13 +16,12 @@ void PathComponent::update(GameEntity& ent, const Level& lv) {
 		case PATH_FOLLOW: { // follow + random
 			int px = lv.getPlayer().getX(), py = lv.getPlayer().getY();
 			int ex = ent.getX(), ey = ent.getY();
-			int minx = std::min(px, ex);
-			int miny = std::min(py, ey);
-			int maxx = std::max(px, ex);
-			int maxy = std::max(py, ey);
+			int minx = std::min(px, ex), miny = std::min(py, ey);
+			int maxx = std::max(px, ex), maxy = std::max(py, ey);
+			int pd = pointDistance(minx, miny, maxx, maxy);
 			const Rectangle& lim = lv.getCamera().getLimit();
 			if (
-				(pointDistance(minx, miny, maxx, maxy) <= st.rad*st.rad) &&
+				(pd <= st.rad*st.rad) && (pd > 16) &&
 				//(!lv.checkSolid(Rectangle(minx, maxx, miny, maxy), ent.getUID())) &&
 				(minx > lim.left+24 && maxx < lim.right-24 && miny > lim.top+24 && maxy < lim.bot+24)
 			) {

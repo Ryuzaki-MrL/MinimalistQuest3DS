@@ -8,9 +8,9 @@
 OSword::OSword(Level& level, EntityType type): GameEntity(level, type) {
 	curstats.setLevel(invdata.weaponlvl[type - OBJ_WHIT]);
 	curstats.addExp(invdata.weaponexp[type - OBJ_WHIT], *this);
-	mv.speed = 1;
+	mv.speed = curstats.spd;
 	//mv.speed = 0.8 + (curstats.lvl * 0.2);
-	tmc.limit = (16 / mv.speed) + 1;
+	tmc.limit = (16 / mv.speed) + 1; // TODO: use sprite width here
 }
 OSword::~OSword() {}
 
