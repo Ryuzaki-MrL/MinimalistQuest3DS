@@ -17,7 +17,7 @@ void OPickable::onKill() {
 	WorldData& wd = level.getWorldData();
 	switch(type) {
 		case OBJ_KEY: wd.inv.addKey(); break;
-		case OBJ_FRIEND: wd.inv.addFriend(); popup("msg_thanks"); break;
+		case OBJ_FRIEND: wd.inv.addFriend(loot.type); popup("msg_thanks"); break;
 		case OBJ_MAP: wd.map.hasmap = true; break;
 		case OBJ_HPUP: wd.player.mhp++; break;
 		case OBJ_POTION: wd.player.chp = std::min(uint8_t(wd.player.chp+8), wd.player.mhp); break;

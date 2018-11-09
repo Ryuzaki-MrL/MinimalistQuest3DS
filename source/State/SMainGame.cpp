@@ -150,8 +150,11 @@ void SMainGame::drawBottom(RenderEngine& render) {
 	for (uint8_t i = chp; i < mhp; ++i) hpbuf[i] = '\'';
 	hpbuf[mhp] = 0;
 	render.drawTextFormat(FNT_SQUARE, 0,  0, 1.0f, C_BLACK, false, "%s\nHP: [%s]", currentSaveProfile().getUserName(), hpbuf);
-	for (uint8_t i = 0; i < wd.inv.countKeys(); ++i) render.drawSprite(sprites_spr_key_0_idx, i<<4, 32);
-	for (uint8_t i = 0; i < wd.inv.countFriends(); ++i) render.drawSprite(sprites_spr_player_0_idx + i, 240 + (i<<4), 32);
+	for (uint8_t i = 0; i < wd.inv.countKeys(); ++i)
+		render.drawSprite(sprites_spr_key_0_idx, i<<4, 32);
+	for (uint8_t i = 0; i < MAX_FRIENDS; ++i) {
+		if (wd.inv.hasFriend(i)) render.drawSprite(spriteGetTexture(SPR_PLAYER, i), 240 + (i<<4), 32);
+	}
 	render.drawText(FNT_SQUARE, 144,  0, 1.0f, C_BLACK, false, messageGet(MSG_WEAPON));
 	render.drawSprite(sprites_spr_weapons_0_idx + wd.inv.curweapon, 145, 15);
 	render.drawTextFormat(FNT_SQUARE, 164, 16, 1.0f, C_BLACK, false, "Lv.%d", wd.inv.weaponlvl[wd.inv.curweapon]);

@@ -10,7 +10,6 @@
 #define ITEM_COUNT		4
 #define SECTION_COUNT	(9 * 6) // hardcoding for this game only
 #define MAX_KEYS		8
-#define MAX_FRIENDS		4
 
 struct PlayerData {
 	uint16_t exp = 0;
@@ -36,8 +35,8 @@ struct InventoryData {
 	inline bool useKey() { return (keys > 0) ? (keys--) : (false); }
 	inline uint8_t countKeys() const { return keys; }
 
-	inline void addFriend() { if (friends < MAX_FRIENDS) ++friends; }
-	inline uint8_t countFriends() const { return friends; }
+	inline void addFriend(uint8_t id) { friends |= (1 << id); }
+	inline bool hasFriend(uint8_t id) const { return (friends >> id) & 1; }
 
 	inline void addItem(size_t id) { if (inventory[id] < 99) ++inventory[id]; }
 	inline bool useItem(size_t id) { return (inventory[id] > 0) ? (inventory[id]--) : (false); }
