@@ -6,11 +6,11 @@
 class GameState;
 class Game {
   private:
-	GameState* state;
-	bool running;
-	u64 framecnt, lasttime;
 	Renderer render;
+	uint64_t framecnt, lasttime;
 	float fps;
+	GameState *state, *tmpstate;
+	bool running, transition;
 
   public:
 	Game();
@@ -18,7 +18,8 @@ class Game {
 
 	bool isRunning() const;
 	float getFPS() const { return fps; }
-	void setState(GameState* newstate);
+	void setState(GameState*);
+	void setStateWithFade(GameState*, uint16_t);
 	void update();
 	void draw();
 	void end();

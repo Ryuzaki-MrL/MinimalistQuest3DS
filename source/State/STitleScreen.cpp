@@ -24,13 +24,13 @@ void STitleScreen::update() {
 	if (Input::isKeyDown(KEY_A)) {
 		SaveProfile& sv = getGlobalSavedata().getProfile(0);
 		switch(selected) {
-			case 0: if (sv.isValid()) game.setState(new SMainGame(game, false)); break; // continue
+			case 0: if (sv.isValid()) game.setStateWithFade(new SMainGame(game, false), 40); break; // continue
 			case 1: char name[sizeof(SaveProfile)];
 					if (!Input::getString(name, messageGet("msg_chrname"), "", sizeof(name))) break;
 					sv.setUserName(name);
 					commitCurrentSavedata(WorldData());
 					commitGlobalSavedata();
-					game.setState(new SMainGame(game, true)); break; // new game
+					game.setStateWithFade(new SMainGame(game, true), 60); break; // new game
 			case 2: game.end(); break; // quit
 		}
 	}

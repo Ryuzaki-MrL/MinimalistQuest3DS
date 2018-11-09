@@ -7,8 +7,9 @@
 #include "Input.h"
 #include "Message.h"
 #include "EntityData.h"
+#include "Fading.h"
 
-Game::Game(): state(nullptr), running(true), framecnt(0), lasttime(osGetTime()) {
+Game::Game(): framecnt(0), lasttime(osGetTime()), state(nullptr), running(true), transition(false) {
 	std::srand(std::time(0));
 	messageInit("romfs:/messages.rzdb");
 	entitiesLoad("romfs:/entities.rzdb");
@@ -22,18 +23,32 @@ Game::~Game() {
 
 // TODO: apply delta time on update
 void Game::update() {
-	Input::update();
-	state->update();
+	if (transition) {
+		switch(fadeStatus()) {
+			case FADE_HALFDONE: setState(tmpstate); break;
+			case FADE_DONE: transition = false; break;
+		}
+	} else {
+		Input::update();
+		state->update();
+	}
 }
 
-void Game::setState(GameState* newstate) {
+void Game::setState(GameState* st) {
 	delete state;
-	state = newstate;
+	state = st;
+}
+
+void Game::setStateWithFade(GameState* st, uint16_t steps) {
+	transition = true;
+	tmpstate = st;
+	fadeStart(steps, C_BLACK);
 }
 
 void Game::draw() {
 	render.frameStart();
 
+	fadeUpdate(render);
 	render.setTargetScreen(GFX_TOP);
 	state->drawTop(render);
 	if (render.get3D() != 0.0) {
