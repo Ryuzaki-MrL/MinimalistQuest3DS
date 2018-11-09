@@ -6,18 +6,9 @@
 #include "SaveData.h"
 #include "Textbox.h"
 #include "Message.h"
-#include "sprites.h"
-
-#define LEVELPATH	"romfs:/map%u.lvl"
+#include "Sprite.h"
 
 static uint8_t MSG_MENU_IDX, MSG_WEAPON, MSG_ITEM, MSG_PAUSE;
-
-// TODO: public func in Level.cpp
-static const char* levelMakePath(unsigned n) {
-	static char lvpath[256];
-	std::sprintf(lvpath, LEVELPATH, n);
-	return lvpath;
-}
 
 SMainGame::SMainGame(Game& game, bool newgame): GameState(game), screen(0), paused(false) {
 	MSG_MENU_IDX = messageGetIndex("msg_map");
@@ -25,7 +16,7 @@ SMainGame::SMainGame(Game& game, bool newgame): GameState(game), screen(0), paus
 	MSG_ITEM = messageGetIndex("msg_item");
 	MSG_PAUSE = messageGetIndex("msg_pause");
 	if (!newgame) loadCurrentSavedata(level.getWorldData());
-	level.load(levelMakePath(0));
+	level.load(Level::makePath(0));
 }
 
 SMainGame::~SMainGame() {}
@@ -59,7 +50,7 @@ void SMainGame::update() {
 			if (Input::isKeyDown(KEY_SELECT)) {
 				game.setState(new STitleScreen(game));
 			}
-		} else  {
+		} else {
 			level.update();
 		}
 	}
@@ -70,9 +61,9 @@ void SMainGame::update() {
 				screen = i; break;
 			}
 		}
-	}
-	switch(screen) {
-		case 2: updateInventoryScreen(level.getWorldData().inv); break;
+		if (screen == 2) {
+			updateInventoryScreen(level.getWorldData().inv);
+		}
 	}
 }
 

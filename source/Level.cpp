@@ -7,10 +7,17 @@
 #include "defs.h"
 #include "Graphics.h"
 
+#define LEVELPATH "romfs:/map%u.lvl" // get workdir from platform.cpp
 #define OBJECT_CAPACITY 1000
 
 Level::Level(): header(), player(*this), pool(OBJECT_CAPACITY), flags(0) {}
 Level::~Level() {}
+
+const char* Level::makePath(uint8_t id) {
+	static char lvpath[256];
+	std::sprintf(lvpath, LEVELPATH, id);
+	return lvpath;
+}
 
 bool Level::load(const char* filename) {
 	FILE* lvl = fopen(filename, "rb");
@@ -59,6 +66,7 @@ bool Level::load(const char* filename) {
 		world.player.y ? (world.player.y * 16) : (header.playery * 16)
 	);
 	setSection(player.getX(), player.getY());
+	camera.update(player.getX(), player.getY());
 
 	fclose(lvl);
 	return true;

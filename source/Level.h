@@ -68,6 +68,7 @@ class Level {
 	inline size_t getSectionCount() const { return occsecs; }
 
 	inline const Camera& getCamera() const { return camera; }
+	inline Camera& getCamera() { return camera; }
 	inline const OPlayer& getPlayer() const { return player; }
 	inline WorldData& getWorldData() { return world; }
 	inline const WorldData& getWorldData() const { return world; }
@@ -79,6 +80,8 @@ class Level {
 
 	void update();
 	void draw(Renderer& render);
+
+	static const char* makePath(uint8_t id);
 };
 
 #endif /* LEVEL_H */
