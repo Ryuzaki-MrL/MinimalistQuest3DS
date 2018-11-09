@@ -12,7 +12,13 @@
 typedef std::function<void(GameEntity&, GameEntity&)> CollisionFn;
 typedef unsigned char Tile;
 
-#define TILE_SOLID	0x40
+enum {
+	LFLAG_CUTSCENE = 0b0001,
+	LFLAG_GAMEOVER = 0b0010,
+	LFLAG_ENDGAME  = 0b0110
+};
+
+#define TILE_SOLID		0x40
 
 // TODO: tilemap class for managing tile data, size and flags
 
@@ -34,6 +40,7 @@ class Level {
 	ObjectPool pool;
 	Camera camera;
 	size_t occsecs, cursec;
+	uint8_t flags;
 	bool scrolling;
 
   public:
@@ -46,6 +53,10 @@ class Level {
 	void instanceDestroy(GameEntity* obj);
 	inline size_t instanceCount() const { return pool.getCount(); }
 	size_t countActive() const;
+
+	inline void setFlag(uint8_t mask) { flags |= mask; }
+	inline void clearFlag(uint8_t mask) { flags &= ~mask; }
+	inline bool checkFlag(uint8_t mask) const { return ((flags & mask)==mask); }
 
 	inline Tile getTile(uint8_t x, uint8_t y) const { return tilemap[y * header.width + x]; }
 	inline void setTile(Tile t, uint8_t x, uint8_t y) { tilemap[y * header.width + x] = t; }

@@ -23,13 +23,13 @@ OPlayer::OPlayer(Level& level, EntityType type): GameEntity(level, type) {
 OPlayer::~OPlayer() {}
 
 void OPlayer::onKill() {
-	
+	level.setFlag(LFLAG_GAMEOVER);
 }
 
 void OPlayer::onMove() {
 	// change section when out of bounds
 	const Rectangle& sec = level.getCamera().getLimit();
-	if (pos.x+8 < 0) return;
+	if (pos.x+8 < 0) level.setFlag(LFLAG_ENDGAME);
 	else if (pos.x+8 < sec.left)  level.setSection(pos.x - 32, pos.y, -10,  0);
 	else if (pos.x+8 > sec.right) level.setSection(pos.x + 32, pos.y, +10,  0);
 	else if (pos.y+8 < sec.top)   level.setSection(pos.x, pos.y - 32,   0, -8);

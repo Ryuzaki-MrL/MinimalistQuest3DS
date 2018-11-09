@@ -9,7 +9,7 @@
 
 #define OBJECT_CAPACITY 1000
 
-Level::Level(): header(), player(*this), pool(OBJECT_CAPACITY) {}
+Level::Level(): header(), player(*this), pool(OBJECT_CAPACITY), flags(0) {}
 Level::~Level() {}
 
 bool Level::load(const char* filename) {
@@ -65,7 +65,7 @@ bool Level::load(const char* filename) {
 }
 
 GameEntity* Level::instanceCreate(int x, int y, EntityType id) {
-	if (id == OBJ_PLAYER) { // do not create another player
+	if (id == OBJ_PLAYER) {
 		player.setInitialPosition(x, y);
 		setSection(player.getX(), player.getY());
 		return nullptr;
@@ -141,7 +141,7 @@ void Level::update() {
 		for (size_t i : pool.getActiveList()) {
 			pool[i]->update();
 		}
-		player.update();
+		if (!checkFlag(LFLAG_CUTSCENE)) player.update();
 		cursec = (header.width / 20) * ((player.getY()+7) / 240) + ((player.getX()+7) / 320);
 		world.map.visit(cursec);
 		pool.garbageCollect();
