@@ -87,6 +87,12 @@ void SMainGame::drawTop(RenderEngine& render) {
 static void drawMapScreen(const Level& level, RenderEngine& render) {
 	render.drawTexture(TEX_MAP, 51, 89);
 	const MapData& mp = level.getWorldData().map;
+	if (!mp.hasmap) {
+		render.drawRectangle(51, 89, 217, 144, C_BLACK);
+		render.drawText(FNT_SQUARE, 160, 144, 1.0f, C_WHITE, true, messageGet("msg_nomap"));
+		return;
+	}
+	render.drawTexture(TEX_MAP, 51, 89);
 	render.drawTextFormat(FNT_SQUARE, 52, 90, 1.0f, C_WHITE, false, "%d%%", (mp.countVisited() * 100) / level.getSectionCount());
 	for (size_t i = 0; i < SECTION_COUNT; ++i) {
 		if (mp.isVisited(i)) {
