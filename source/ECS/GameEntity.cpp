@@ -3,22 +3,40 @@
 #include "Graphics.h"
 #include "Message.h"
 
+#define GROUP_COUNT 256
+
 template<int N> struct _{ operator char() { return N + 256; } };
 
 static uint16_t s_nextuid = 0;
+static uint16_t s_entcount[MAX_ENTITY] = { 0 };
+static uint16_t s_entgp[GROUP_COUNT] = { 0 };
 
 GameEntity::GameEntity(Level& level, EntityType type):
-  level(level), data(entityGetData(type)), uid(++s_nextuid), type(type), dead(false) {
+  level(level), data(entityGetData(type)), uid(++s_nextuid), type(type), group(0), dead(false) {
 	char(_<sizeof(GameEntity)>()); // report size as a compiler warning
+	++s_entcount[type]; ++s_entgp[group];
 	spr = SpriteComponent(Sprite(data.sprite), data.anim);
 	path.type = data.path;
 	curstats.baseidx = data.baseidx;
 	curstats.setLevel(1);
 }
+GameEntity::~GameEntity() {
+	--s_entcount[type];
+	--s_entgp[group];
+}
+
+uint16_t GameEntity::getCount(EntityType type) {
+	return s_entcount[type];
+}
+
+uint16_t GameEntity::getCountGroup(uint8_t group) {
+	return s_entgp[group];
+}
 
 void GameEntity::serialize(FILE* out) const {
 	fwrite(&pos.xs, 1, sizeof(pos.xs), out);
 	fwrite(&pos.ys, 1, sizeof(pos.ys), out);
+	fwrite(&group, 1, sizeof(group), out);
 	if (hasComponent(COMPONENT_SPRITE)) fwrite(&spr, 1, sizeof(spr), out); else // >>
 	if (hasProperty(PROPERTY_SPRTRSAVE)) fwrite(&spr.tr, 1, sizeof(spr.tr), out);
 	if (hasComponent(COMPONENT_STATS)) fwrite(&curstats.lvl, 1, sizeof(curstats.lvl), out);
@@ -31,6 +49,9 @@ void GameEntity::deserialize(FILE* in) {
 	fread(&pos.xs, 1, sizeof(pos.xs), in);
 	fread(&pos.ys, 1, sizeof(pos.ys), in);
 	pos.reset();
+	--s_entgp[group];
+	fread(&group, 1, sizeof(group), in);
+	++s_entgp[group];
 	if (hasComponent(COMPONENT_SPRITE)) fread(&spr, 1, sizeof(spr), in); else // >>
 	if (hasProperty(PROPERTY_SPRTRSAVE)) fread(&spr.tr, 1, sizeof(spr.tr), in);
 	if (hasComponent(COMPONENT_STATS)) {
@@ -41,6 +62,12 @@ void GameEntity::deserialize(FILE* in) {
 	if (hasComponent(COMPONENT_LOOT)) fread(&loot, 1, sizeof(loot), in);
 	if (hasComponent(COMPONENT_PATH)) fread(&path.type, 1, sizeof(path.type), in);
 	onLoad();
+}
+
+void GameEntity::setGroup(uint8_t gp) {
+	--s_entgp[group];
+	group = gp;
+	++s_entgp[group];
 }
 
 bool GameEntity::move(float x, float y) {

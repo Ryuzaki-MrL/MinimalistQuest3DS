@@ -2,7 +2,6 @@
 #define GAMEENTITY_H
 
 #include "types.h"
-#include "Counter.h"
 #include "ISerializable.h"
 #include "EntityData.h"
 #include "Components.h"
@@ -10,7 +9,7 @@
 
 class Level;
 class RenderEngine;
-class GameEntity: public Counter<GameEntity>, public ISerializable {
+class GameEntity: public ISerializable {
   protected:
 	SpriteComponent spr;
 	StatComponent curstats;
@@ -26,6 +25,7 @@ class GameEntity: public Counter<GameEntity>, public ISerializable {
 	const EntityData& data;
 	const uint16_t uid;
 	const EntityType type;
+	uint8_t group;
 	bool dead;
 
   private:
@@ -40,10 +40,12 @@ class GameEntity: public Counter<GameEntity>, public ISerializable {
 
   public:
 	GameEntity(Level& level, EntityType type);
-	virtual ~GameEntity() {}
+	virtual ~GameEntity();
 
 	inline EntityType getType() const { return type; }
 	inline uint16_t getUID() const { return uid; }
+	inline uint8_t getGroup() const { return group; }
+	void setGroup(uint8_t);
 
 	inline int getX() const { return pos.x; }
 	inline int getY() const { return pos.y; }
@@ -60,7 +62,6 @@ class GameEntity: public Counter<GameEntity>, public ISerializable {
 	inline const StatComponent& getStats() const { return curstats; }
 	inline const BaseStatData& getBaseStats() const { return getBaseStatData(curstats.baseidx); }
 
-	// TODO: onEvent
 	virtual void onTimeOut() {}
 	virtual void onDamage(uint8_t /* amount */, GameEntity& /* damager */) {}
 
@@ -81,6 +82,9 @@ class GameEntity: public Counter<GameEntity>, public ISerializable {
 
 	void serialize(FILE* out) const;
 	void deserialize(FILE* in);
+
+	static uint16_t getCount(EntityType);
+	static uint16_t getCountGroup(uint8_t);
 };
 
 #endif /* GAMEENTITY_H */
