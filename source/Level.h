@@ -19,8 +19,9 @@ enum {
 };
 
 #define TILE_SOLID		0x40
+#define TILE_PASSABLE	0x20
 
-// TODO: tilemap class for managing tile data, size and flags
+// TODO: tilemap class for managing tileset id, tile data, tile size and tile flags
 
 struct LevelHeader {
 	uint32_t magic;
@@ -71,7 +72,7 @@ class Level {
 	inline WorldData& getWorldData() { return world; }
 	inline const WorldData& getWorldData() const { return world; }
 
-	bool checkTile(const Rectangle& bbox) const;
+	bool checkTile(const Rectangle& bbox, uint8_t flags) const;
 	bool checkSolid(const Rectangle& bbox, size_t except) const;
 	const GameEntity* checkObject(const Rectangle& bbox, size_t except, bool solid = false) const;
 	void collisionHandle(const Rectangle& bbox, GameEntity& me, CollisionFn colfn);

@@ -25,10 +25,12 @@ void OBoomerang::onMove() {
 		if (other.hasProperty(PROPERTY_PICKABLE)) other.kill();
 		if (other.getType() == OBJ_PLAYER && me.getStats().attacking) me.kill();
 	});
-	// TODO: pass through holes
 	if (curstats.attacking) {
 		mv.direction = pointDirection(level.getPlayer().getX(), level.getPlayer().getY(), pos.x, pos.y);
-	} else if (level.checkSolid(getBoundingBox(), uid) || (pointDistance(pos.x, pos.y, pos.xs, pos.ys) > curstats.rad*curstats.rad)) {
+	} else if (
+		(!level.checkTile(getBoundingBox(), TILE_PASSABLE) && level.checkSolid(getBoundingBox(), uid)) ||
+		(pointDistance(pos.x, pos.y, pos.xs, pos.ys) > curstats.rad*curstats.rad)
+	) {
 		curstats.attacking = true; // using as a flag for "comeback"
 		mv.speed = std::max(int(mv.speed), level.getPlayer().getStats().spd << 1);
 	}

@@ -95,17 +95,17 @@ void Level::setSection(int x, int y, int xs, int ys) {
 	pool.clearActiveList();
 }
 
-bool Level::checkTile(const Rectangle& bbox) const {
+bool Level::checkTile(const Rectangle& bbox, uint8_t flags) const {
 	return (
-		(getTile(bbox.left  >> 4, bbox.top >> 4) & TILE_SOLID) ||
-		(getTile(bbox.right >> 4, bbox.top >> 4) & TILE_SOLID) ||
-		(getTile(bbox.right >> 4, bbox.bot >> 4) & TILE_SOLID) ||
-		(getTile(bbox.left  >> 4, bbox.bot >> 4) & TILE_SOLID)
+		(getTile(bbox.left  >> 4, bbox.top >> 4) & flags) ||
+		(getTile(bbox.right >> 4, bbox.top >> 4) & flags) ||
+		(getTile(bbox.right >> 4, bbox.bot >> 4) & flags) ||
+		(getTile(bbox.left  >> 4, bbox.bot >> 4) & flags)
 	);
 }
 
 bool Level::checkSolid(const Rectangle& bbox, size_t except) const {
-	return (checkTile(bbox)) || (checkObject(bbox, except, true) != nullptr);
+	return (checkTile(bbox, TILE_SOLID)) || (checkObject(bbox, except, true) != nullptr);
 }
 
 const GameEntity* Level::checkObject(const Rectangle& bbox, size_t except, bool solid) const {
@@ -160,7 +160,7 @@ void Level::draw(RenderEngine& render) {
 	for (int j = ty; j <= ty + SCREEN_HEIGHT / TILE_HEIGHT && j < header.height; ++j) {
 		for (int i = tx; i <= tx + SUBSCREEN_WIDTH / TILE_WIDTH && i < header.width; ++i) {
 			if (!getTile(i, j)) continue;
-			render.drawTile(getTile(i, j) & 0x3F, i*TILE_WIDTH, j*TILE_HEIGHT);
+			render.drawTile(getTile(i, j) & 0x1F, i*TILE_WIDTH, j*TILE_HEIGHT);
 		}
 	}
 	render.screenTranslate(-threedee/2.0, 0);
