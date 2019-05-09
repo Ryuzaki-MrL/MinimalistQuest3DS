@@ -6,8 +6,6 @@
 #include "ClassBuffer.h"
 #include "GameEntity.h"
 
-typedef bool(*ObjectPredFn)(const GameEntity&);
-
 class ObjectPool {
   private:
 	ClassBuffer<GameEntity>* obj;
@@ -33,8 +31,6 @@ class ObjectPool {
 	void buildActiveList(const Rectangle& region, bool inside = true);
 	inline void clearActiveList() { activelist.clear(); }
 	inline const std::vector<size_t>& getActiveList() const { return activelist; }
-
-	GameEntity* find(ObjectPredFn pred);
 };
 
 #endif /* OBJECTPOOL_H */

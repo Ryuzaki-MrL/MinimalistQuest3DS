@@ -9,7 +9,8 @@
 #include "ObjectPool.h"
 #include "WorldData.h"
 
-typedef std::function<void(GameEntity&, GameEntity&)> CollisionFn;
+//typedef std::function<void(GameEntity&)> CollisionFn;
+typedef std::function<void(GameEntity&)> EntityFn;
 typedef unsigned char Tile;
 
 enum {
@@ -51,9 +52,10 @@ class Level {
 	bool load(const char* filename);
 
 	GameEntity* instanceCreate(int x, int y, EntityType id);
-	void instanceDestroy(GameEntity* obj);
-	inline size_t instanceCount() const { return pool.getCount(); }
-	size_t countActive() const;
+	void instanceDestroy(GameEntity*);
+	inline size_t instanceCount() const { return pool.getCount(); } // TODO: count by type
+	size_t countActive(EntityType type = OBJ_NONE) const;
+	void refreshActive();
 
 	inline void setFlag(uint8_t mask) { flags |= mask; }
 	inline void clearFlag(uint8_t mask) { flags &= ~mask; }
@@ -75,11 +77,12 @@ class Level {
 
 	bool checkTile(const Rectangle& bbox, uint8_t flags) const;
 	bool checkSolid(const Rectangle& bbox, size_t except) const;
-	const GameEntity* checkObject(const Rectangle& bbox, size_t except, bool solid = false) const;
-	void collisionHandle(const Rectangle& bbox, GameEntity& me, CollisionFn colfn);
+	const GameEntity* checkObject(const Rectangle& bbox, size_t except, uint16_t props = 0xFFFF) const;
+	void collisionHandle(const Rectangle& bbox, size_t except, EntityFn colfn);
+	void foreach(EntityFn, int group = -1);
 
 	void update();
-	void draw(Renderer& render);
+	void draw(Renderer&);
 
 	static const char* makePath(uint8_t id);
 };

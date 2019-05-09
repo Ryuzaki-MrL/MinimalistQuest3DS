@@ -2,6 +2,7 @@
 #include "Level.h"
 #include "Graphics.h"
 #include "Message.h"
+#include "defs.h"
 
 #define GROUP_COUNT 256
 
@@ -34,6 +35,7 @@ uint16_t GameEntity::getCountGroup(uint8_t group) {
 }
 
 void GameEntity::serialize(FILE* out) const {
+	fwrite(&type, 1, sizeof(EntityType), out);
 	fwrite(&pos.xs, 1, sizeof(pos.xs), out);
 	fwrite(&pos.ys, 1, sizeof(pos.ys), out);
 	fwrite(&group, 1, sizeof(group), out);
@@ -43,6 +45,7 @@ void GameEntity::serialize(FILE* out) const {
 	if (hasComponent(COMPONENT_FLAG)) fwrite(&flg, 1, sizeof(flg), out);
 	if (hasComponent(COMPONENT_LOOT)) fwrite(&loot, 1, sizeof(loot), out);
 	if (hasComponent(COMPONENT_PATH)) fwrite(&path.type, 1, sizeof(path.type), out);
+	if (hasComponent(COMPONENT_SCRIPT)) fwrite(&scr.scrid, 1, sizeof(scr.scrid), out);
 }
 
 void GameEntity::deserialize(FILE* in) {
@@ -61,6 +64,7 @@ void GameEntity::deserialize(FILE* in) {
 	if (hasComponent(COMPONENT_FLAG)) fread(&flg, 1, sizeof(flg), in);
 	if (hasComponent(COMPONENT_LOOT)) fread(&loot, 1, sizeof(loot), in);
 	if (hasComponent(COMPONENT_PATH)) fread(&path.type, 1, sizeof(path.type), in);
+	if (hasComponent(COMPONENT_SCRIPT)) fread(&scr.scrid, 1, sizeof(scr.scrid), in);
 	onLoad();
 }
 
@@ -86,13 +90,13 @@ void GameEntity::kill() {
 }
 
 void GameEntity::interact() {
-	level.collisionHandle(getBoundingBox() + Rectangle(-8, 8, -8, 8), *this, [](GameEntity& me, GameEntity& other) {
-		other.onInteract(me);
+	level.collisionHandle(getBoundingBox() + Rectangle(-8, 8, -8, 8), uid, [this](GameEntity& other) {
+		other.onInteract(*this);
 	});
 }
 
 void GameEntity::damage(EntityType except) {
-	level.collisionHandle(getBoundingBox(), *this, [except](GameEntity& me, GameEntity& other) {
+	level.collisionHandle(getBoundingBox(), uid, [this, except](GameEntity& other) {
 		if ((other.hasProperty(PROPERTY_DAMAGEABLE)) && (other.getType() != except)) {
 			other.getStats().damage(other, me /* damager */);
 		}
@@ -109,6 +113,7 @@ void GameEntity::update() {
 	tmc.update(*this);
 	if (hasComponent(COMPONENT_MOVEMENT)) mv.update(*this);
 	if (hasComponent(COMPONENT_PATH)) path.update(*this, level);
+	if (hasComponent(COMPONENT_SCRIPT)) scr.update(level);
 	if (curstats.imm) --curstats.imm; // temporary hack
 	else if (hasComponent(COMPONENT_STATS)) spr.color.c.a = 0xFF;
 	onUpdate();

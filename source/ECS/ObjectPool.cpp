@@ -46,22 +46,15 @@ void ObjectPool::clear() {
 void ObjectPool::buildActiveList(const Rectangle& region, bool inside) {
 	clearActiveList();
 	for (size_t i = 0; i < count;) {
-		const GameEntity& inst = *obj[i];
+		GameEntity& inst = *obj[i];
 		if (inst.isDead()) {
 			destroy(i);
 		} else {
 			if ((inst.hasProperty(PROPERTY_PERSISTENT)) || (inst.collideWith(region) ^ !inside)) {
+				inst.onLoad();
 				activelist.push_back(i);
 			}
 			++i;
 		}
 	}
-}
-
-GameEntity* ObjectPool::find(ObjectPredFn pred) {
-	for (size_t i = 0; i < count; ++i) {
-		GameEntity* inst = obj[i];
-		if (pred(*inst)) return inst;
-	}
-	return nullptr;
 }

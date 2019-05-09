@@ -15,11 +15,11 @@ class GameEntity: public ISerializable {
 	StatComponent curstats;
 	PositionComponent pos;
 	MovementComponent mv;
-	//ReservedComponent resv;
 	TimerComponent tmc;
 	LootComponent loot;
 	FlagComponent flg;
 	PathComponent path;
+	ScriptComponent scr;
 
 	Level& level;
 	const EntityData& data;
@@ -35,7 +35,6 @@ class GameEntity: public ISerializable {
 	virtual void onKill() {}
 
 	virtual void onMove() {}
-	virtual void onLoad() {}
 	virtual void onInteract(GameEntity& /* other */) {}
 
   public:
@@ -50,7 +49,8 @@ class GameEntity: public ISerializable {
 	inline int getX() const { return pos.x; }
 	inline int getY() const { return pos.y; }
 	bool move(float x, float y);
-	inline void setInitialPosition(int x, int y) { pos = PositionComponent(x, y); }
+	inline void setPosition(int x, int y) { pos = PositionComponent(x, y); }
+	inline void setPath(uint8_t type) { path.type = type; }
 
 	inline const Rectangle getBoundingBox(int xx, int yy) const { return spr.getBoundingBox() + Rectangle(xx, xx, yy, yy); }
 	inline const Rectangle getBoundingBox() const { return getBoundingBox(pos.x, pos.y); }
@@ -62,6 +62,7 @@ class GameEntity: public ISerializable {
 	inline const StatComponent& getStats() const { return curstats; }
 	inline const BaseStatData& getBaseStats() const { return getBaseStatData(curstats.baseidx); }
 
+	virtual void onLoad() {}
 	virtual void onTimeOut() {}
 	virtual void onDamage(uint8_t /* amount */, GameEntity& /* damager */) {}
 

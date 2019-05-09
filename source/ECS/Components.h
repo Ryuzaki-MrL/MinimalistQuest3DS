@@ -10,6 +10,7 @@
 #include "CFlag.h"
 #include "CLoot.h"
 #include "CStats.h"
+#include "CScript.h"
 
 enum {
 	COMPONENT_MOVEMENT	= (1 << 0),

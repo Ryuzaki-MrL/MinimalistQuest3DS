@@ -61,7 +61,7 @@ bool Level::load(const char* filename) {
 	}
 
 	new(&player) OPlayer(*this);
-	player.setInitialPosition(
+	player.setPosition(
 		world.player.x ? (world.player.x * 16) : (header.playerx * 16),
 		world.player.y ? (world.player.y * 16) : (header.playery * 16)
 	);
@@ -74,12 +74,12 @@ bool Level::load(const char* filename) {
 
 GameEntity* Level::instanceCreate(int x, int y, EntityType id) {
 	if (id == OBJ_PLAYER) {
-		player.setInitialPosition(x, y);
+		player.setPosition(x, y);
 		setSection(player.getX(), player.getY());
 		return nullptr;
 	} else {
 		GameEntity* obj = pool.create(id, *this);
-		if (obj) obj->setInitialPosition(x, y);
+		if (obj) obj->setPosition(x, y);
 		return obj;
 	}
 }
@@ -89,8 +89,20 @@ void Level::instanceDestroy(GameEntity* obj) {
 	pool.garbageCollect();
 }
 
-size_t Level::countActive() const {
-	return pool.getActiveList().size();
+size_t Level::countActive(EntityType type) const {
+	if (type == OBJ_NONE) {
+		return pool.getActiveList().size();
+	}
+	size_t cnt = 0;
+	for (size_t i : pool.getActiveList()) {
+		cnt += (pool[i]->getType() == type);
+	}
+	return cnt;
+}
+
+void Level::refreshActive() {
+	pool.clearActiveList();
+	pool.buildActiveList(camera.getLimit(), true);
 }
 
 void Level::setSection(int x, int y, int xs, int ys) {
@@ -113,28 +125,37 @@ bool Level::checkTile(const Rectangle& bbox, uint8_t flags) const {
 }
 
 bool Level::checkSolid(const Rectangle& bbox, size_t except) const {
-	return (checkTile(bbox, TILE_SOLID)) || (checkObject(bbox, except, true) != nullptr);
+	return (checkTile(bbox, TILE_SOLID)) || (checkObject(bbox, except, PROPERTY_SOLID) != nullptr);
 }
 
-const GameEntity* Level::checkObject(const Rectangle& bbox, size_t except, bool solid) const {
-	if (!solid && player.getUID()!=except && player.collideWith(bbox)) {
+const GameEntity* Level::checkObject(const Rectangle& bbox, size_t except, uint16_t props) const {
+	if (player.getUID()!=except && player.collideWith(bbox) && player.hasProperty(props)) {
 		return &player;
 	}
 	for (size_t i : pool.getActiveList()) {
-		if (pool[i]->getUID()!=except && pool[i]->collideWith(bbox) && (!solid || pool[i]->hasProperty(PROPERTY_SOLID))) {
+		if (pool[i]->getUID()!=except && pool[i]->collideWith(bbox) && pool[i]->hasProperty(props)) {
 			return pool[i];
 		}
 	}
 	return nullptr;
 }
 
-void Level::collisionHandle(const Rectangle& bbox, GameEntity& me, CollisionFn colfn) {
-	if (player.getUID()!=me.getUID() && player.collideWith(bbox)) {
-		colfn(me, player);
+void Level::collisionHandle(const Rectangle& bbox, size_t except, EntityFn colfn) {
+	if (player.getUID()!=except && player.collideWith(bbox)) {
+		colfn(player);
 	}
 	for (size_t i : pool.getActiveList()) {
-		if (pool[i]->getUID()!=me.getUID() && pool[i]->collideWith(bbox)) {
-			colfn(me, *pool[i]);
+		if (pool[i]->getUID()!=except && pool[i]->collideWith(bbox)) {
+			colfn(*pool[i]);
+		}
+	}
+}
+
+void Level::foreach(EntityFn entfn, int group) {
+	for (size_t i : pool.getActiveList()) {
+		GameEntity& ent = *pool[i];
+		if (group < 0 || ent.getGroup() == group) {
+			entfn(ent);
 		}
 	}
 }
@@ -178,6 +199,6 @@ void Level::draw(Renderer& render) {
 	player.draw(render);
 	render.screenTranslate(-camera.getX() + 40 - (threedee/2.0), -camera.getY());
 	threedee = fabs(threedee);
-	render.drawRectangle(0,0,40+threedee,240,C_BLACK);
-	render.drawRectangle(360-threedee,0,41+threedee,240,C_BLACK);
+	render.drawRectangle(0, 0, 40 + threedee, 240, C_BLACK);
+	render.drawRectangle(360 - threedee, 0, 41 + threedee, 240, C_BLACK);
 }

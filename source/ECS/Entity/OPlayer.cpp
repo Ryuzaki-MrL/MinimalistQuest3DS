@@ -95,7 +95,7 @@ void OPlayer::onUpdate() {
 		level.instanceCreate(pos.x+32, pos.y, EntityType(OBJ_SKELETON + (rand() % 5))); // debug
 	}
 
-	level.collisionHandle(getBoundingBox(), *this, [](GameEntity& me, GameEntity& other) {
+	level.collisionHandle(getBoundingBox(), uid, [this](GameEntity& other) {
 		if (other.hasProperty(PROPERTY_PICKABLE)) other.kill();
 		if (other.hasProperty(PROPERTY_ENEMY)) me.getStats().damage(me, other);
 	});

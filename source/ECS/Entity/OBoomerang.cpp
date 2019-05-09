@@ -21,7 +21,7 @@ void OBoomerang::onKill() {
 void OBoomerang::onMove() {
 	damage(OBJ_BRICKWALL);
 	spr.tr.angle += mv.speed * 10;
-	level.collisionHandle(getBoundingBox(), *this, [](GameEntity& me, GameEntity& other) {
+	level.collisionHandle(getBoundingBox(), uid, [this](GameEntity& other) {
 		if (other.hasProperty(PROPERTY_PICKABLE)) other.kill();
 		if (other.getType() == OBJ_PLAYER && me.getStats().attacking) me.kill();
 	});
