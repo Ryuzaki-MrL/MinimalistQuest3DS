@@ -25,6 +25,6 @@ struct SpriteData {
 //void spritesInit(const char* filename);
 
 const SpriteData* spriteGet(Sprite id);
-uint8_t spriteGetTexture(Sprite id, uint8_t frame);
+uint8_t spriteGetTexture(Sprite id, uint8_t frame = 0);
 
 #endif /* SPRITE_H */
