@@ -79,6 +79,7 @@ void Renderer::setTargetScreen(gfxScreen_t screen, gfx3dSide_t side) {
 	} else {
 		C2D_SceneBegin(currtarg = bot);
 	}
+	C2D_TargetClear(currtarg, C_WHITE);
 }
 
 float Renderer::get3D() {
@@ -90,7 +91,6 @@ void Renderer::frameEnd() {
 }
 
 void Renderer::screenClear(u32 color) {
-	//C2D_TargetClear(currtarg, color);
 	drawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color);
 }
 
