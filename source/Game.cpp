@@ -7,12 +7,14 @@
 #include "Input.h"
 #include "Message.h"
 #include "EntityData.h"
+#include "Script.h"
 #include "Fading.h"
 
 Game::Game(): framecnt(0), lasttime(osGetTime()), state(nullptr), running(true), transition(false) {
 	std::srand(std::time(0));
 	messageInit("romfs:/messages.rzdb");
 	entitiesLoad("romfs:/entities.rzdb");
+	scriptsLoad("romfs:/scripts.rzdb");
 
 	setState(new STitleScreen(*this));
 }
@@ -61,7 +63,7 @@ void Game::draw() {
 
 	render.frameEnd();
 
-	// calculate fps
+	// calculate fps (debug)
 	++framecnt;
 	u64 delta = osGetTime() - lasttime;
 	if (delta > 1000) {
