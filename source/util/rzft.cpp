@@ -1,30 +1,32 @@
 /// Custom font format for use with Citro2D (RyuZaki FonT)
 
+#include <citro2d.h>
+
 #include "rzft.h"
 
 #pragma pack(1)
 
-typedef struct {
+struct rzftHeader {
 	char magic[4]; // RZFT
 	C2D_SpriteSheet sheet;
 	uint16_t lineHeight;
 	uint16_t baseline;
 	uint16_t npages;
 	uint16_t spacing;
-} rzftHeader;
+};
 
-typedef struct {
+struct rzftChar {
 	uint16_t glyph;
 	int16_t xoffs;
 	int16_t yoffs;
 	int16_t advance;
-} rzftChar;
+};
 
-typedef struct {
+struct rzftPage {
 	rzftChar chr[0x100];
-} rzftPage;
+};
 
-struct s_rzftfont {
+struct RZFT_Font {
 	rzftHeader hdr;
 	rzftPage pages[];
 };

@@ -24,4 +24,12 @@ inline int pointDirection(int x1, int y1, int x2, int y2) {
 	return -(atan2(y2-y1, x2-x1) * 180.0 / PI) + 180;
 }
 
+inline int signum(int val) {
+	return (0 < val) - (val < 0);
+}
+
+inline int clamp(int val, int low, int hi) {
+	return ((val < low) ? low : ((val > hi) ? hi : val));
+}
+
 #endif /* DEFS_H */

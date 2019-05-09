@@ -29,12 +29,4 @@ union Color {
 	} c;
 };
 
-inline int signum(int val) {
-	return (0 < val) - (val < 0);
-}
-
-inline int clamp(int val, int low, int hi) {
-	return ((val < low) ? low : ((val > hi) ? hi : val));
-}
-
 #endif /* TYPES_H */

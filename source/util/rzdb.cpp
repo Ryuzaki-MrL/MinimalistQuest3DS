@@ -1,16 +1,16 @@
 /// Custom database format (RyuZaki DataBase)
 
-#include <3ds.h>
+#include <3ds.h> // TODO: use new/delete
 
 #include "rzdb.h"
 
 #pragma pack(1)
 
-struct s_rzdbfile {
+struct RZDB_File {
 	FILE* handle;
 };
 
-struct s_rzdbchk {
+struct RZDB_Chunk {
 	char* data;
 	u16 cnt;
 	size_t chkidx[];
