@@ -1,6 +1,6 @@
 /// Custom database format (RyuZaki DataBase)
 
-#include <3ds.h> // TODO: use new/delete
+#include <3ds.h>
 
 #include "rzdb.h"
 
@@ -41,7 +41,8 @@ void RZDB_CloseFile(RZDB_File* file) {
 }
 
 size_t RZDB_ReadChunk(RZDB_File* file, char* out, size_t chksize) {
-	return fread(out, chksize, RZDB_ReadSize(file), file->handle);
+	size_t sz = RZDB_ReadSize(file);
+	return fread(out, chksize, sz, file->handle);
 }
 
 size_t RZDB_ReadString(RZDB_File* file, char* out) {
@@ -50,11 +51,12 @@ size_t RZDB_ReadString(RZDB_File* file, char* out) {
 
 size_t RZDB_ReadSize(RZDB_File* file) {
 	size_t sz = 0;
+	size_t shift = 0;
 	u8 tmp = 0;
 	do {
 		fread(&tmp, 1, sizeof(tmp), file->handle);
-		sz <<= 7;
-		sz += tmp & 0x7F;
+		sz |= (tmp & 0x7F) << shift;
+		shift += 7;
 	} while(tmp > 127);
 	return sz;
 }
