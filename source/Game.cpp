@@ -2,8 +2,7 @@
 #include <ctime>
 #include <3ds.h>
 
-#include "Game.h"
-#include "STitleScreen.h"
+#include "GameState.h"
 #include "Input.h"
 #include "Message.h"
 #include "EntityData.h"
@@ -12,18 +11,16 @@
 
 Game::Game(): framecnt(0), lasttime(osGetTime()), state(nullptr), running(true), transition(false) {
 	std::srand(std::time(0));
+
 	messageInit("romfs:/messages.rzdb");
 	entitiesLoad("romfs:/entities.rzdb");
 	scriptsLoad("romfs:/scripts.rzdb");
-
-	setState(new STitleScreen(*this));
 }
 
 Game::~Game() {
 	delete state;
 }
 
-// TODO: apply delta time on update
 void Game::update() {
 	if (transition) {
 		switch(fadeStatus()) {

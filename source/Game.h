@@ -9,7 +9,8 @@ class Game {
 	Renderer render;
 	uint64_t framecnt, lasttime;
 	float fps;
-	GameState *state, *tmpstate;
+	GameState* state;
+	GameState* tmpstate;
 	bool running, transition;
 
   public:

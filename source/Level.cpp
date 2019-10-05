@@ -7,7 +7,7 @@
 #include "defs.h"
 #include "Graphics.h"
 
-#define LEVELPATH "romfs:/map%u.lvl" // get workdir from platform.cpp
+#define LEVELPATH "romfs:/map%u.lvl"
 #define OBJECT_CAPACITY 1000
 
 Level::Level(): header(), player(*this), pool(OBJECT_CAPACITY), flags(0) {}
@@ -53,12 +53,16 @@ bool Level::load(const char* filename) {
 	pool.clear();
 
 	EntityType oid;
-	fread(&sz, sizeof(sz), 1, lvl);
+	fread(&sz, 1, sizeof(sz), lvl);
+	//FILE* flog = fopen("log.txt", "w");
 	for (size_t i = 0; i < sz; ++i) {
-		fread(&oid, sizeof(EntityType), 1, lvl);
+		//EntityType prev = oid; // TODO: remove this
+		fread(&oid, 1, sizeof(EntityType), lvl);
 		GameEntity* ob = pool.create(oid, *this);
 		if (ob) ob->deserialize(lvl);
+		//else fprintf(flog, "failed to create obj %u, at filepos: %lu, previous: %u.\n", oid, ftell(lvl), prev);
 	}
+	//fclose(flog);
 
 	new(&player) OPlayer(*this);
 	player.setPosition(

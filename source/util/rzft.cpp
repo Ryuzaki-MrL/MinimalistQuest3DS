@@ -99,6 +99,7 @@ static void RZFT_WordWrap(const RZFT_Font* font, float scale, int wrap, char* te
 }
 
 static void RZFT_DrawTextInternal(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, int center, const char* text) {
+	// TODO: center text line by line (calculate individual width for each line)
 	if (center) {
 		x -= ((int)RZFT_GetTextWidth(font, scaleX, text) >> 1);
 	}

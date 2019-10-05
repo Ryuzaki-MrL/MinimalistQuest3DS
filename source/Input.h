@@ -5,9 +5,6 @@
 
 #define KEY_ANY 0xFFFFFFFF
 
-// TODO: key bindings by passing a 'InputConfig' struct or manually
-// adding/removing bindings
-
 namespace Input {
 	void update();
 

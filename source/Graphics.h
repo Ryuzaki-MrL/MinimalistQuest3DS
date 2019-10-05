@@ -21,7 +21,6 @@ enum Font: uint8_t {
 
 class Renderer {
   private:
-	// TODO: move this to a RenderContext platform-specific struct
 	float tx, ty;
 	C3D_RenderTarget* top;
 	C3D_RenderTarget* right;

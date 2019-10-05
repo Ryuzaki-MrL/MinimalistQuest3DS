@@ -40,7 +40,6 @@ Renderer::Renderer(): tx(0), ty(0) {
 	right = C2D_CreateScreenTarget(GFX_TOP, GFX_RIGHT);
 	bot = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 
-	// TODO: separate textures from render engine
 	texturesheet = C2D_SpriteSheetLoad("romfs:/textures.t3x");
 	spritesheet = C2D_SpriteSheetLoad("romfs:/sprites.t3x");
 	tileset = C2D_SpriteSheetLoad("romfs:/tileset.t3x");

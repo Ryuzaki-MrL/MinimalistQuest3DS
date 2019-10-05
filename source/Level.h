@@ -22,8 +22,6 @@ enum {
 #define TILE_SOLID		0x40
 #define TILE_PASSABLE	0x20
 
-// TODO: tilemap class for managing tileset id, tile data, tile size and tile flags
-
 struct LevelHeader {
 	uint32_t magic;
 	uint8_t width;

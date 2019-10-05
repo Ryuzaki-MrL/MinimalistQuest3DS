@@ -29,6 +29,7 @@ void ObjectPool::destroy(size_t pos) {
 void ObjectPool::garbageCollect() {
 	for (size_t i = 0; i < activelist.size();) {
 		if (obj[activelist[i]].get()->isDead()) {
+			obj[activelist[i]].get()->~GameEntity();
 			std::swap(activelist[i], activelist.back());
 			activelist.pop_back();
 		} else {
@@ -42,13 +43,13 @@ void ObjectPool::clear() {
 	clearActiveList();
 }
 
-// TODO: add flexibility to build list based on any criteria
 void ObjectPool::buildActiveList(const Rectangle& region, bool inside) {
 	clearActiveList();
 	for (size_t i = 0; i < count;) {
 		GameEntity& inst = *obj[i];
 		if (inst.isDead()) {
-			destroy(i);
+			std::swap(obj[i], obj[--count]);
+			//destroy(i);
 		} else {
 			if ((inst.hasProperty(PROPERTY_PERSISTENT)) || (inst.collideWith(region) ^ !inside)) {
 				inst.onLoad();

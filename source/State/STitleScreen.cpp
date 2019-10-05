@@ -49,7 +49,7 @@ void STitleScreen::drawTop(Renderer& render) {
 	}
 	render.screenClear(C_WHITE);
 	//render.screenTranslate(render.get3D(), 0);
-	//render.drawTexture(TEX_LOGO, 64, 48); // TODO: draw logo with less depth
+	//render.drawTexture(TEX_LOGO, 64, 48); // TODO: draw logo
 	render.screenTranslate(render.get3D(), 0);
 	for (int i = 0; i < OPT_COUNT; ++i) {
 		render.drawText(FNT_SQUARE, 200, 160+i*20, 1.0f, (selected==i) ? RGBA8(sblend,0,0,0xFF) : C_BLACK, true, messageGet(MSG_MENU_IDX + i));
@@ -75,6 +75,7 @@ static void drawGameQuitScreen(Renderer& render) {
 }
 */
 void STitleScreen::drawBottom(Renderer& render) {
+	// TODO: bottom screen artwork for each option
 	render.screenClear(C_WHITE);
 	/*
 	switch(selected) {
