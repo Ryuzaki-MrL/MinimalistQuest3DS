@@ -14,8 +14,13 @@ void OEnemy::onMove() {
 
 void OEnemy::onKill() {
 	if (type == OBJ_CHESTCRAB) {
-		GameEntity* ch = level.instanceCreate(getX(), getY(), OBJ_CHEST);
-		if (ch) ch->getLoot() = loot; // Passing whole state also allows for a locked chest crab
+		int xx = ((int(getX()) - 8) / 16) * 16;
+		int yy = ((int(getY()) - 0) / 16) * 16;
+		GameEntity* ch = level.instanceCreate(xx, yy, OBJ_CHEST);
+		if (ch) {
+			ch->flg = flg;
+			ch->loot = loot; // Passing whole state also allows for a locked chest crab
+		}
 	} else {
 		level.instanceCreate(getX(), getY(), EntityType(loot.type));
 	}
