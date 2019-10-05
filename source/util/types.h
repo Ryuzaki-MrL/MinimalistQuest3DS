@@ -2,10 +2,21 @@
 #define TYPES_H
 
 #include <3ds/types.h>
+#include "defs.h"
 
-// TODO: keep platform-specific code away from headers
-// and create "platform.cpp" for filesystem and language
-// detection functions
+struct Point {
+	int x, y;
+	Point(int x, int y): x(x), y(y) {}
+	~Point() {}
+	inline void translate(int xx, int yy) { x += xx; y += yy; }
+	inline void rotate(int angle) {
+		float a = degtorad(angle);
+		int nx = (x * cos(a) - y * sin(a));
+		int ny = (y * cos(a) + x * sin(a));
+		x = nx;
+		y = ny;
+	}
+};
 
 struct Rectangle {
 	int left, right, top, bot;

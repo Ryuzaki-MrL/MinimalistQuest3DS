@@ -11,22 +11,31 @@ struct SprTrData {
 
 class Renderer;
 struct SpriteComponent {
-	Color color;
+	Rectangle bbox;
 	SprTrData tr;
+	Color color;
+	Sprite sprite;
 	int8_t steps;
 	uint8_t frame;
-	Sprite sprite;
   private:
 	uint8_t counter = 0;
 
   public:
-	SpriteComponent(Sprite spr = SPR_NONE, int8_t steps = 0): color(0xFF000000), steps(steps), frame(0), sprite(spr) {}
+	void calcBoundingBox();
+
+	SpriteComponent(Sprite spr = SPR_NONE, int8_t steps = 0): color(0xFF000000), sprite(spr), steps(steps), frame(0) {
+		calcBoundingBox();
+	}
 
 	void update();
 	void draw(float x, float y, Renderer& render);
 
-	// TODO: apply scale and rotation
-	inline const Rectangle& getBoundingBox() const { return spriteGet(sprite)->bbox; }
+	inline const Rectangle& getBoundingBox() const { return bbox; }
+
+	inline void setSprite(Sprite spr) { sprite = spr; calcBoundingBox(); }
+	inline void setAngle(int16_t angle) { tr.angle = angle; calcBoundingBox(); }
+	inline void rotate(int16_t angle) { tr.angle += angle; calcBoundingBox(); }
+	inline void scale(int8_t xscale, int8_t yscale) { tr.xscale = xscale; tr.yscale = yscale; calcBoundingBox(); }
 };
 
 #endif /* CSPRITE_H */

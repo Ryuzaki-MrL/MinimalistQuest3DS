@@ -11,14 +11,14 @@ enum Sprite: uint8_t {
 	SPR_CHECKPOINT, SPR_ENEMYMUSH, SPR_SKELETON, SPR_SLIME,
 	SPR_SPIDER, SPR_SPIRIT, SPR_CHESTCRAB, SPR_EVENTMARK,
 	SPR_SWORD, SPR_PICKAXE, SPR_BOOMERANG,
-	MAX_SPRITE
+	NUM_SPRITES
 };
 
 struct SpriteData {
 	uint8_t texture;
 	uint8_t imgcount;
-	float xorig;
-	float yorig;
+	int8_t xorig;
+	int8_t yorig;
 	Rectangle bbox;
 };
 
