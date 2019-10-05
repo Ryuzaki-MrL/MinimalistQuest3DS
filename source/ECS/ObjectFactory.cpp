@@ -5,8 +5,10 @@
 #include "OWeapon.h"
 #include "OItem.h"
 #include "OGate.h"
+#include "OWall.h"
 #include "OEventBlock.h"
 #include "OTrigger.h"
+#include "OLever.h"
 #include "OBrickWall.h"
 #include "OBounceBall.h"
 #include "OCheckpoint.h"
@@ -36,7 +38,7 @@ bool gameEntityFactory(GameEntity* out, EntityType id, Level& level) {
 		CASE(OBJ_SWITCH, OTrigger)
 		CASE(OBJ_LEVER, OLever)
 		CASE(OBJ_BRICKWALL, OBrickWall)
-		CASE(OBJ_EVWALL, OGate)
+		CASE(OBJ_EVWALL, OWall)
 		CASE(OBJ_BOUNCEBALL, OBounceBall)
 		CASE(OBJ_CHECKPOINT, OCheckpoint)
 		CASE(OBJ_CHEST, OChest)
