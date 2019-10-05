@@ -12,7 +12,8 @@ enum {
 	PROPERTY_SPRTRSAVE	= (1 <<  7),
 	PROPERTY_ENEMY		= (1 <<  8),
 	PROPERTY_WEAPON		= (1 <<  9),
-	PROPERTY_INTERACT	= (1 << 10)
+	PROPERTY_INTERACT	= (1 << 10),
+	PROPERTY_SAVEANIM	= (1 << 11)
 };
 
 #endif /* PROPERTIES_H */

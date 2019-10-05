@@ -10,7 +10,7 @@
 class Level;
 class Renderer;
 class GameEntity: public ISerializable {
-  protected:
+  public:
 	SpriteComponent spr;
 	StatComponent curstats;
 	PositionComponent pos;
@@ -21,6 +21,7 @@ class GameEntity: public ISerializable {
 	PathComponent path;
 	ScriptComponent scr;
 
+  protected:
 	Level& level;
 	const EntityData& data;
 	const uint16_t uid;
@@ -50,16 +51,11 @@ class GameEntity: public ISerializable {
 	inline int getY() const { return pos.y; }
 	bool move(float x, float y);
 	inline void setPosition(int x, int y) { pos = PositionComponent(x, y); }
-	inline void setPath(uint8_t type) { path.type = type; }
 	void applyDamage(GameEntity& damager);
 
 	inline const Rectangle getBoundingBox(int xx, int yy) const { return spr.getBoundingBox() + Rectangle(xx, xx, yy, yy); }
 	inline const Rectangle getBoundingBox() const { return getBoundingBox(pos.x, pos.y); }
 
-	inline SpriteComponent& getSprite() { return spr; }
-	inline LootComponent& getLoot() { return loot; }
-	inline MovementComponent& getMovement() { return mv; }
-	inline StatComponent& getStats() { return curstats; }
 	inline const StatComponent& getStats() const { return curstats; }
 	inline const BaseStatData& getBaseStats() const { return getBaseStatData(curstats.baseidx); }
 
@@ -82,8 +78,8 @@ class GameEntity: public ISerializable {
 	void update();
 	void draw(Renderer&);
 
-	void serialize(FILE* out) const;
-	void deserialize(FILE* in);
+	void serialize(FILE*) const;
+	void deserialize(FILE*);
 
 	static uint16_t getCount(EntityType);
 	static uint16_t getCountGroup(uint8_t);

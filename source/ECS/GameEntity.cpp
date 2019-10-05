@@ -9,7 +9,7 @@
 template<int N> struct _{ operator char() { return N + 256; } };
 
 static uint16_t s_nextuid = 0;
-static uint16_t s_entcount[MAX_ENTITY] = { 0 };
+static uint16_t s_entcount[NUM_ENTITIES] = { 0 };
 static uint16_t s_entgp[GROUP_COUNT] = { 0 };
 
 GameEntity::GameEntity(Level& level, EntityType type):
@@ -39,8 +39,8 @@ void GameEntity::serialize(FILE* out) const {
 	fwrite(&pos.xs, 1, sizeof(pos.xs), out);
 	fwrite(&pos.ys, 1, sizeof(pos.ys), out);
 	fwrite(&group, 1, sizeof(group), out);
-	if (hasComponent(COMPONENT_SPRITE)) fwrite(&spr, 1, sizeof(spr), out); else // >>
 	if (hasProperty(PROPERTY_SPRTRSAVE)) fwrite(&spr.tr, 1, sizeof(spr.tr), out);
+	if (hasComponent(COMPONENT_SPRITE)) fwrite(&spr.color, 1, sizeof(spr.color) + sizeof(spr.sprite), out);
 	if (hasComponent(COMPONENT_STATS)) fwrite(&curstats.lvl, 1, sizeof(curstats.lvl), out);
 	if (hasComponent(COMPONENT_FLAG)) fwrite(&flg, 1, sizeof(flg), out);
 	if (hasComponent(COMPONENT_LOOT)) fwrite(&loot, 1, sizeof(loot), out);
@@ -52,19 +52,28 @@ void GameEntity::deserialize(FILE* in) {
 	fread(&pos.xs, 1, sizeof(pos.xs), in);
 	fread(&pos.ys, 1, sizeof(pos.ys), in);
 	pos.reset();
+	if (hasProperty(PROPERTY_SPRTRSAVE))
+		fread(&spr.tr, 1, sizeof(spr.tr), in);
+	if (hasProperty(PROPERTY_SAVEANIM))
+		fread(&spr.steps, 1, sizeof(spr.steps), in);
+	if (hasComponent(COMPONENT_SPRITE)) {
+		fread(&spr.color, 1, sizeof(uint32_t), in);
+		fread(&spr.sprite, 1, sizeof(Sprite), in);
+	}
+	spr.calcBoundingBox();
+	if (hasComponent(COMPONENT_FLAG))
+		fread(&flg.id, 1, sizeof(flg.id), in);
+	if (hasComponent(COMPONENT_LOOT)) {
+		fread(&loot.type, 1, sizeof(loot.type), in);
+		fread(&loot.locked, 1, sizeof(loot.locked), in);
+	}
+	if (hasComponent(COMPONENT_PATH))
+		fread(&path.type, 1, sizeof(path.type), in);
+	if (hasComponent(COMPONENT_SCRIPT))
+		fread(&scr.scrid, 1, sizeof(scr.scrid), in);
 	--s_entgp[group];
 	fread(&group, 1, sizeof(group), in);
 	++s_entgp[group];
-	if (hasComponent(COMPONENT_SPRITE)) fread(&spr, 1, sizeof(spr), in); else // >>
-	if (hasProperty(PROPERTY_SPRTRSAVE)) fread(&spr.tr, 1, sizeof(spr.tr), in);
-	if (hasComponent(COMPONENT_STATS)) {
-		fread(&curstats.lvl, 1, sizeof(curstats.lvl), in);
-		curstats.setLevel(curstats.lvl);
-	}
-	if (hasComponent(COMPONENT_FLAG)) fread(&flg, 1, sizeof(flg), in);
-	if (hasComponent(COMPONENT_LOOT)) fread(&loot, 1, sizeof(loot), in);
-	if (hasComponent(COMPONENT_PATH)) fread(&path.type, 1, sizeof(path.type), in);
-	if (hasComponent(COMPONENT_SCRIPT)) fread(&scr.scrid, 1, sizeof(scr.scrid), in);
 	onLoad();
 }
 
@@ -112,7 +121,7 @@ void GameEntity::applyDamage(GameEntity& damager) {
 
 void GameEntity::popup(const char* msg) {
 	GameEntity* pp = level.instanceCreate(getX(), getY() - 20, OBJ_POPUP);
-	if (pp) pp->getLoot().type = messageGetIndex(msg);
+	if (pp) pp->loot.type = messageGetIndex(msg);
 }
 
 void GameEntity::update() {
@@ -121,13 +130,13 @@ void GameEntity::update() {
 	if (hasComponent(COMPONENT_MOVEMENT)) mv.update(*this);
 	if (hasComponent(COMPONENT_PATH)) path.update(*this, level);
 	if (hasComponent(COMPONENT_SCRIPT)) scr.update(level);
-	if (curstats.imm) --curstats.imm; // temporary hack
-	else if (hasComponent(COMPONENT_STATS)) spr.color.c.a = 0xFF;
+	if (curstats.imm) --curstats.imm; else
+	if (hasComponent(COMPONENT_STATS)) spr.color.c.a = 0xFF; // temporary hack
 	onUpdate();
 }
 
 void GameEntity::draw(Renderer& render) {
-	if (hasProperty(PROPERTY_SHOWDIR)) spr.tr.angle = mv.direction; // temporary hack
+	if (hasProperty(PROPERTY_SHOWDIR)) spr.tr.angle = mv.direction;
 	spr.draw(pos.x, pos.y, render);
 	if ((hasProperty(PROPERTY_DAMAGEABLE)) && (curstats.chp < curstats.mhp)) {
 		int8_t sx = abs(spr.tr.xscale);
