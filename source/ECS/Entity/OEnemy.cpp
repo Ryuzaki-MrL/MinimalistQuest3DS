@@ -26,8 +26,7 @@ void OEnemy::onTimeOut() {
 	if (curstats.chp == 0) kill();
 }
 
-void OEnemy::onDamage(uint8_t amt, GameEntity& damager) {
-	if (curstats.chp == 0) damager.getStats().addExp(getBaseStats().baseexp * curstats.lvl, damager);
+void OEnemy::onDamage(uint8_t amt, GameEntity&) {
 	if (amt == 0) popup("msg_nodamage");
 	spr.color.c.a = 0x9F;
 	path.type += 200; // store path

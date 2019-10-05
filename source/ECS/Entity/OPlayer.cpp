@@ -15,8 +15,6 @@ void signalAttackEnd() {
 
 OPlayer::OPlayer(Level& level, EntityType type): GameEntity(level, type) {
 	const PlayerData& pd = level.getWorldData().player;
-	curstats.setLevel(pd.lvl);
-	curstats.addExp(pd.exp, *this);
 	curstats.chp = pd.chp;
 	s_pweapon = OBJ_NONE;
 }
@@ -63,8 +61,8 @@ void OPlayer::onUpdate() {
 		if (Input::isKeyDown(KEY_A)) {
 			interact();
 		} else if (Input::isKeyDown(KEY_B) && !isPlayerAttacking()) {
-			if (inv.curweapon && inv.weaponlvl[inv.curweapon]) {
-				GameEntity* wp = level.instanceCreate(getX(), getY(), EntityType(OBJ_SWORD + inv.curweapon - 1));
+			if (inv.curweapon && inv.getWeapon(inv.curweapon)) {
+				GameEntity* wp = level.instanceCreate(getX(), getY(), EntityType(OBJ_WHIT + inv.curweapon));
 				if (wp) {
 					wp->getMovement().direction = mv.direction;
 					s_pweapon = wp->getType();
@@ -79,7 +77,7 @@ void OPlayer::onUpdate() {
 	if (Input::isKeyDown(KEY_L | KEY_ZL)) {
 		do {
 			inv.curweapon = (inv.curweapon + (Input::isKeyDown(KEY_L) ? 1 : (WEAPON_COUNT-1))) % WEAPON_COUNT;
-		} while(!inv.weaponlvl[inv.curweapon] && inv.curweapon != 0);
+		} while(!inv.getWeapon(inv.curweapon) && inv.curweapon != 0);
 	}
 	if (Input::isKeyDown(KEY_R | KEY_ZR)) {
 		do {

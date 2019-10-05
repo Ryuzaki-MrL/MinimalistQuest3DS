@@ -19,7 +19,7 @@ GameEntity::GameEntity(Level& level, EntityType type):
 	spr = SpriteComponent(Sprite(data.sprite), data.anim);
 	path.type = data.path;
 	curstats.baseidx = data.baseidx;
-	curstats.setLevel(1);
+	curstats.validate();
 }
 GameEntity::~GameEntity() {
 	--s_entcount[type];
@@ -98,9 +98,16 @@ void GameEntity::interact() {
 void GameEntity::damage(EntityType except) {
 	level.collisionHandle(getBoundingBox(), uid, [this, except](GameEntity& other) {
 		if ((other.hasProperty(PROPERTY_DAMAGEABLE)) && (other.getType() != except)) {
-			other.getStats().damage(other, me /* damager */);
+			other.applyDamage(*this);
 		}
 	});
+}
+
+void GameEntity::applyDamage(GameEntity& damager) {
+	uint8_t dmg = clamp(clamp(damager.getStats().atk, 1, 255) - curstats.def, 0, 255);
+	if (curstats.applyDamage(dmg)) {
+		onDamage(dmg, damager);
+	}
 }
 
 void GameEntity::popup(const char* msg) {

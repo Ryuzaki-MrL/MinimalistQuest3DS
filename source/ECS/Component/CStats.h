@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-class GameEntity;
 struct StatComponent {
 	uint16_t exp = 0;
 	uint8_t lvl = 1;
@@ -17,10 +16,8 @@ struct StatComponent {
 	uint8_t baseidx = 0;
 	bool attacking = false;
 
-	void addExp(uint16_t amt, GameEntity& me);
-	void setLevel(uint8_t lvl);
 	void validate(); // adjust stats
-	void damage(GameEntity& me, GameEntity& other);
+	bool applyDamage(uint8_t dmg);
 };
 
 #endif /* CSTAT_H */

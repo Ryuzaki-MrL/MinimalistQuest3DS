@@ -8,6 +8,6 @@ OWeapon::~OWeapon() {}
 
 void OWeapon::onKill() {
 	InventoryData& inv = level.getWorldData().inv;
-	inv.weaponlvl[type - OBJ_WEAPON]++;
+	inv.upgradeWeapon(type - OBJ_WEAPON);
 	inv.curweapon = type - OBJ_WEAPON;
 }

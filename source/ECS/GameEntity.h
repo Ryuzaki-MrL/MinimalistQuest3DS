@@ -51,6 +51,7 @@ class GameEntity: public ISerializable {
 	bool move(float x, float y);
 	inline void setPosition(int x, int y) { pos = PositionComponent(x, y); }
 	inline void setPath(uint8_t type) { path.type = type; }
+	void applyDamage(GameEntity& damager);
 
 	inline const Rectangle getBoundingBox(int xx, int yy) const { return spr.getBoundingBox() + Rectangle(xx, xx, yy, yy); }
 	inline const Rectangle getBoundingBox() const { return getBoundingBox(pos.x, pos.y); }
@@ -64,7 +65,7 @@ class GameEntity: public ISerializable {
 
 	virtual void onLoad() {}
 	virtual void onTimeOut() {}
-	virtual void onDamage(uint8_t /* amount */, GameEntity& /* damager */) {}
+	virtual void onDamage(uint8_t /* amt */, GameEntity& /* damager */) {}
 
 	inline bool hasComponent(uint16_t comp) const { return data.comps & comp; }
 	inline bool hasProperty(uint16_t prop) const { return data.props & prop; }
