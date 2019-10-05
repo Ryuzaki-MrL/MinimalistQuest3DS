@@ -5,12 +5,12 @@ OPickable::OPickable(Level& level, EntityType type): GameEntity(level, type) {}
 OPickable::~OPickable() {}
 
 void OPickable::onLoad() {
-	if (hasComponent(COMPONENT_FLAG) && flg.isMarked(level)) kill();
+	if (hasComponent(COMPONENT_FLAG) && flg.id && flg.isMarked(level)) kill();
 	if (hasComponent(COMPONENT_LOOT)) spr.frame = loot.type;
 }
 
 void OPickable::onKill() {
-	if (hasComponent(COMPONENT_FLAG)) {
+	if (hasComponent(COMPONENT_FLAG) && flg.id) {
 		if (flg.isMarked(level)) return;
 		flg.mark(level);
 	}

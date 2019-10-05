@@ -16,6 +16,7 @@ struct ScriptComponent {
 	void setArg(int arg, int val);
 	inline bool isDone() const { return done; }
 	inline bool isRunning() const { return running; }
+	inline void reset() { done = running = false; }
 	void update(Level&);
 };
 

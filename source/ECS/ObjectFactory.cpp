@@ -34,7 +34,7 @@ bool gameEntityFactory(GameEntity* out, EntityType id, Level& level) {
 		CASE(OBJ_GATE, OGate)
 		CASE(OBJ_EVTRIGGER, OEventBlock)
 		CASE(OBJ_SWITCH, OTrigger)
-		CASE(OBJ_LEVER, OTrigger) // debug
+		CASE(OBJ_LEVER, OLever)
 		CASE(OBJ_BRICKWALL, OBrickWall)
 		CASE(OBJ_EVWALL, OGate)
 		CASE(OBJ_BOUNCEBALL, OBounceBall)

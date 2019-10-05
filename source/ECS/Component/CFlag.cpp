@@ -2,9 +2,9 @@
 #include "Level.h"
 
 void FlagComponent::mark(Level& lv) {
-	lv.getWorldData().flagSet(id);
+	lv.getWorldData().uflags.set(id);
 }
 
 bool FlagComponent::isMarked(const Level& lv) {
-	return lv.getWorldData().flagCheck(id);
+	return lv.getWorldData().uflags.test(id);
 }

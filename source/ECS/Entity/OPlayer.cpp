@@ -25,7 +25,7 @@ void OPlayer::onKill() {
 }
 
 void OPlayer::onMove() {
-	// change section when out of bounds
+	// Change section when out of bounds
 	const Rectangle& sec = level.getCamera().getLimit();
 	if (pos.x+8 < 0) level.setFlag(LFLAG_ENDGAME);
 	else if (pos.x+8 < sec.left)  level.setSection(pos.x - 32, pos.y, -10,  0);
@@ -46,6 +46,14 @@ void OPlayer::onDamage(uint8_t dmg, GameEntity&) {
 }
 
 void OPlayer::onUpdate() {
+	// allow collision to occur during cutscenes
+	level.collisionHandle(getBoundingBox(), uid, [this](GameEntity& other) {
+		if (other.hasProperty(PROPERTY_PICKABLE)) other.kill();
+		if (other.hasProperty(PROPERTY_ENEMY) && !other.getStats().imm) applyDamage(other);
+	});
+
+	if (level.checkFlag(LFLAG_CUTSCENE)) return;
+
 	InventoryData& inv = level.getWorldData().inv;
 	if ((!isPlayerAttacking()) || ((s_pweapon == OBJ_BOOMERANG) && (!curstats.attacking))) {
 		if (Input::isKeyHeld(KEY_RIGHT)) {
@@ -64,7 +72,7 @@ void OPlayer::onUpdate() {
 			if (inv.curweapon && inv.getWeapon(inv.curweapon)) {
 				GameEntity* wp = level.instanceCreate(getX(), getY(), EntityType(OBJ_WHIT + inv.curweapon));
 				if (wp) {
-					wp->getMovement().direction = mv.direction;
+					wp->mv.direction = mv.direction;
 					s_pweapon = wp->getType();
 				}
 				curstats.attacking = true;
@@ -73,7 +81,7 @@ void OPlayer::onUpdate() {
 		}
 	}
 
-	// Change current item and weapon (TODO: move this to SMainGame)
+	// Change current item and weapon
 	if (Input::isKeyDown(KEY_L | KEY_ZL)) {
 		do {
 			inv.curweapon = (inv.curweapon + (Input::isKeyDown(KEY_L) ? 1 : (WEAPON_COUNT-1))) % WEAPON_COUNT;
@@ -88,17 +96,15 @@ void OPlayer::onUpdate() {
 	if (Input::isKeyDown(KEY_X)) {
 		int objtype; Input::getInteger(objtype, "Object ID");
 		level.instanceCreate(pos.x+32, pos.y, EntityType(objtype)); // debug
+		//level.instanceCreate(getX(), getY(), EntityType(OBJ_IUSE + inv.curitem));
 	}
-	if (Input::isKeyDown(KEY_Y)) {
-		level.instanceCreate(pos.x+32, pos.y, EntityType(OBJ_SKELETON + (rand() % 5))); // debug
+	if (Input::isKeyDown(KEY_Y)) { // TODO: remove this
+		int scrid; Input::getInteger(scrid, "Script ID");
+		GameEntity* evt = level.instanceCreate(pos.x+32, pos.y, OBJ_EVTRIGGER);
+		if (evt) evt->scr.scrid = scrid;
 	}
 
-	level.collisionHandle(getBoundingBox(), uid, [this](GameEntity& other) {
-		if (other.hasProperty(PROPERTY_PICKABLE)) other.kill();
-		if (other.hasProperty(PROPERTY_ENEMY)) me.getStats().damage(me, other);
-	});
-
-	// slip out of solids
+	// Slip out of solids
 	if (level.checkSolid(getBoundingBox(), uid)) {
 		(move(16,0))||(move(-16,0))||(move(0,16))||(move(0,-16));
 	}

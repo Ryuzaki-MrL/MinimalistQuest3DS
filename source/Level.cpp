@@ -170,7 +170,7 @@ void Level::update() {
 		for (size_t i : pool.getActiveList()) {
 			pool[i]->update();
 		}
-		if (!checkFlag(LFLAG_CUTSCENE)) player.update();
+		player.update();
 		cursec = (header.width / 20) * ((player.getY()+7) / 240) + ((player.getX()+7) / 320);
 		world.map.visit(cursec);
 		pool.garbageCollect();

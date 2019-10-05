@@ -5,7 +5,7 @@
 
 class Level;
 struct FlagComponent {
-	uint16_t id;
+	uint16_t id = 0;
 	void mark(Level&);
 	bool isMarked(const Level&);
 };
