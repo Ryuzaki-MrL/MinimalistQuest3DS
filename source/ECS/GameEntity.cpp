@@ -117,7 +117,7 @@ void GameEntity::popup(const char* msg) {
 
 void GameEntity::update() {
 	spr.update();
-	tmc.update(*this);
+	if (tmc.update() == TIMED_OUT) onTimeOut();
 	if (hasComponent(COMPONENT_MOVEMENT)) mv.update(*this);
 	if (hasComponent(COMPONENT_PATH)) path.update(*this, level);
 	if (hasComponent(COMPONENT_SCRIPT)) scr.update(level);
