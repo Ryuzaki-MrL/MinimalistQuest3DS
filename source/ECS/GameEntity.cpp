@@ -141,7 +141,7 @@ void GameEntity::draw(Renderer& render) {
 	if ((hasProperty(PROPERTY_DAMAGEABLE)) && (curstats.chp < curstats.mhp)) {
 		int8_t sx = abs(spr.tr.xscale);
 		render.drawRectangle(pos.x, pos.y-6, sx<<4, 6, C_BLACK);
-		render.drawRectangle(pos.x+sx, pos.y-5, (curstats.chp*((sx<<4)-sx))/curstats.mhp, 4, RGBA8(0,0x7F,0,0xFF));
+		render.drawRectangle(pos.x+sx, pos.y-5, (curstats.chp*((sx<<4)-sx))/curstats.mhp, 4, RGBA8(0,0xBF,0,0xFF));
 	}
 	onDraw(render);
 }

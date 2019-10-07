@@ -23,7 +23,7 @@ struct SpriteComponent {
   public:
 	void calcBoundingBox();
 
-	SpriteComponent(Sprite spr = SPR_NONE, int8_t steps = 0): color(0xFF000000), sprite(spr), steps(steps), frame(0) {
+	SpriteComponent(Sprite spr = SPR_NONE, int8_t steps = 0): color(0xFFFFFFFF), sprite(spr), steps(steps), frame(0) {
 		calcBoundingBox();
 	}
 

@@ -41,7 +41,7 @@ void OPlayer::onTimeOut() {
 void OPlayer::onDamage(uint8_t dmg, GameEntity&) {
 	uint8_t& chp = level.getWorldData().player.chp;
 	chp = (dmg > chp) ? 0 : (chp - dmg);
-	spr.color.c.a = 0x9F;
+	spr.color.c.a = 0xAF;
 	if (chp == 0) kill();
 }
 

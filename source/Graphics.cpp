@@ -36,6 +36,12 @@ Renderer::Renderer(): tx(0), ty(0) {
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
 
+	// custom color modulation
+	C3D_TexEnv* env = C3D_GetTexEnv(2);
+	C3D_TexEnvInit(env);
+	C3D_TexEnvSrc(env, C3D_Both, GPU_PREVIOUS, GPU_PRIMARY_COLOR, GPU_TEXTURE3);
+	C3D_TexEnvFunc(env, C3D_Both, GPU_MODULATE);
+
 	top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 	right = C2D_CreateScreenTarget(GFX_TOP, GFX_RIGHT);
 	bot = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
@@ -106,7 +112,8 @@ void Renderer::drawRectangle(float x, float y, float w, float h, u32 color) {
 }
 
 void Renderer::drawSprite(uint8_t id, float x, float y) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(spritesheet, id), x - tx, y - ty, 0.0f);
+	C2D_PlainImageTint(&s_tint, C_WHITE, 0.0f);
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(spritesheet, id), x - tx, y - ty, 0.0f, &s_tint);
 }
 
 void Renderer::drawSpriteExt(uint8_t id, float x, float y, float xorig, float yorig, float xscale, float yscale, float angle, u32 color) {
@@ -121,11 +128,14 @@ void Renderer::drawSpriteExt(uint8_t id, float x, float y, float xorig, float yo
 }
 
 void Renderer::drawTile(uint8_t id, int x, int y) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(tileset, id), x - tx, y - ty, 0.0f);
+	C2D_PlainImageTint(&s_tint, C_WHITE, 0.0f);
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(tileset, id), x - tx, y - ty, 0.0f, &s_tint);
 }
 
 void Renderer::drawTexture(Texture id, int x, int y) {
-	C2D_DrawImageAt(C2D_SpriteSheetGetImage(texturesheet, id), x, y, 0.0f);
+	C2D_PlainImageTint(&s_tint, C_WHITE, 0.0f);
+	C2D_DrawImageAt(C2D_SpriteSheetGetImage(texturesheet, id), x, y, 0.0f, &s_tint);
+	// modulate();
 }
 
 void Renderer::drawTextureColor(Texture id, int x, int y, u32 color, float blend) {
@@ -134,11 +144,12 @@ void Renderer::drawTextureColor(Texture id, int x, int y, u32 color, float blend
 }
 
 void Renderer::drawTextureFill(Texture id) {
+	C2D_PlainImageTint(&s_tint, C_WHITE, 0.0f);
 	C2D_Image img = C2D_SpriteSheetGetImage(texturesheet, id);
 	int txi = tx, tyi = ty;
 	for (u16 x = 0; x <= SCREEN_WIDTH; x += img.subtex->width) {
 		for (u16 y = 0; y <= SCREEN_HEIGHT; y += img.subtex->height) {
-			C2D_DrawImageAt(img, x - (txi & (img.subtex->width - 1)), y - (tyi & (img.subtex->height - 1)), 0.0f);
+			C2D_DrawImageAt(img, x - (txi & (img.subtex->width - 1)), y - (tyi & (img.subtex->height - 1)), 0.0f, &s_tint);
 		}
 	}
 }

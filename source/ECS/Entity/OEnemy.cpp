@@ -33,7 +33,7 @@ void OEnemy::onTimeOut() {
 
 void OEnemy::onDamage(uint8_t amt, GameEntity&) {
 	if (amt == 0) popup("msg_nodamage");
-	spr.color.c.a = 0x9F;
+	spr.color.c.a = 0xAF;
 	path.type += 200; // store path
 	mv.speed = 0;
 	tmc.limit = getBaseStats().baseimm >> 1;
