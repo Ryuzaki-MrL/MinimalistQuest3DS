@@ -51,7 +51,7 @@ class Level {
 
 	GameEntity* instanceCreate(int x, int y, EntityType id);
 	void instanceDestroy(GameEntity*);
-	inline size_t instanceCount() const { return pool.getCount(); } // TODO: count by type
+	inline size_t instanceCount() const { return pool.getCount(); }
 	size_t countActive(EntityType type = OBJ_NONE) const;
 	void refreshActive();
 
@@ -70,8 +70,9 @@ class Level {
 	inline const Camera& getCamera() const { return camera; }
 	inline Camera& getCamera() { return camera; }
 	inline const OPlayer& getPlayer() const { return player; }
-	inline WorldData& getWorldData() { return world; }
+	inline OPlayer& getPlayer() { return player; }
 	inline const WorldData& getWorldData() const { return world; }
+	inline WorldData& getWorldData() { return world; }
 
 	bool checkTile(const Rectangle& bbox, uint8_t flags) const;
 	bool checkSolid(const Rectangle& bbox, size_t except) const;

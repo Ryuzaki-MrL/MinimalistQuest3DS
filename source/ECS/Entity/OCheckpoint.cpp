@@ -10,5 +10,6 @@ void OCheckpoint::onInteract(GameEntity&) {
 	wd.player.x = getX() / 16;
 	wd.player.y = getY() / 16;
 	commitCurrentSavedata(wd);
+	commitGlobalSavedata();
 	popup("msg_saved");
 }

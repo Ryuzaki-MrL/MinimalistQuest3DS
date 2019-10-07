@@ -26,6 +26,8 @@ bool gameEntityFactory(GameEntity* out, EntityType id, Level& level) {
 		CASE(OBJ_KEY, OPickable)
 		CASE(OBJ_MAP, OPickable)
 		CASE(OBJ_HPUP, OPickable)
+		CASE(OBJ_POTION, OPickable)
+		CASE(OBJ_PILL, OPickable)
 		CASE(OBJ_FRIEND, OPickable)
 		CASE(OBJ_WSWORD, OWeapon)
 		CASE(OBJ_WBOOMERANG, OWeapon)

@@ -94,14 +94,16 @@ void OPlayer::onUpdate() {
 	}
 
 	if (Input::isKeyDown(KEY_X)) {
-		int objtype; Input::getInteger(objtype, "Object ID");
-		level.instanceCreate(pos.x+32, pos.y, EntityType(objtype)); // debug
-		//level.instanceCreate(getX(), getY(), EntityType(OBJ_IUSE + inv.curitem));
+		//int objtype; Input::getInteger(objtype, "Object ID");
+		//level.instanceCreate(pos.x+32, pos.y, EntityType(objtype)); // debug
 	}
 	if (Input::isKeyDown(KEY_Y)) { // TODO: remove this
-		int scrid; Input::getInteger(scrid, "Script ID");
-		GameEntity* evt = level.instanceCreate(pos.x+32, pos.y, OBJ_EVTRIGGER);
-		if (evt) evt->scr.scrid = scrid;
+		if (inv.useItem(inv.curitem)) {
+			level.instanceCreate(getX(), getY(), EntityType(OBJ_IUSE + inv.curitem));
+		}
+		//int scrid; Input::getInteger(scrid, "Script ID");
+		//GameEntity* evt = level.instanceCreate(pos.x+32, pos.y, OBJ_EVTRIGGER);
+		//if (evt) evt->scr.scrid = scrid;
 	}
 
 	// Slip out of solids
