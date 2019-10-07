@@ -18,7 +18,11 @@ SMainGame::SMainGame(Game& game, bool newgame): GameState(game), screen(0), paus
 	MSG_WEAPON = messageGetIndex("msg_weapon");
 	MSG_ITEM = messageGetIndex("msg_item");
 	MSG_PAUSE = messageGetIndex("msg_pause");
-	if (!newgame) loadCurrentSavedata(level.getWorldData());
+	if (newgame) {
+		level.getWorldData() = WorldData();
+	} else {
+		loadCurrentSavedata(level.getWorldData());
+	}
 	level.load(Level::makePath(0));
 }
 
@@ -42,6 +46,10 @@ static void updateInventoryScreen(InventoryData& inv) {
 			inv.curitem = i; break;
 		}
 	}
+	/*static const int xoffs = ITEM_COUNT*INV_XSEP+20;
+	if (tbox.collideWith(Rectangle(xoffs, xoffs+64, 192, 192+40))) {
+		level.instanceCreate(level.getPlayer().getX(), level.getPlayer().getY(), EntityType(OBJ_IUSE + inv.curitem));
+	}*/
 }
 
 void SMainGame::update() {

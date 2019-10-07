@@ -8,12 +8,12 @@ class STitleScreen: public GameState {
 	uint8_t selected;
 
   public:
-	STitleScreen(Game& game);
+	STitleScreen(Game&);
 	~STitleScreen();
 
 	void update();
-	void drawTop(Renderer& render);
-	void drawBottom(Renderer& render);
+	void drawTop(Renderer&);
+	void drawBottom(Renderer&);
 };
 
 #endif /* TITLESCREEN_H */

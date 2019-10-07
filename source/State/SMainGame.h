@@ -11,12 +11,12 @@ class SMainGame: public GameState {
 	bool paused;
 
   public:
-	SMainGame(Game& game, bool newgame = false);
+	SMainGame(Game&, bool newgame = false);
 	~SMainGame();
 
 	void update();
-	void drawTop(Renderer& render);
-	void drawBottom(Renderer& render);
+	void drawTop(Renderer&);
+	void drawBottom(Renderer&);
 };
 
 #endif /* MAINGAME_H */

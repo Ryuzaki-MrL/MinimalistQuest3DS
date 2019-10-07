@@ -12,6 +12,7 @@ static uint8_t MSG_MENU_IDX;
 
 STitleScreen::STitleScreen(Game& game): GameState(game), selected(0) {
 	MSG_MENU_IDX = messageGetIndex("msg_menu00");
+	loadGlobalSavedata();
 }
 STitleScreen::~STitleScreen() {}
 
@@ -21,17 +22,26 @@ void STitleScreen::update() {
 	} else if (Input::isKeyDown(KEY_UP)) {
 		selected = (selected - 1 + OPT_COUNT) % OPT_COUNT;
 	}
+
 	if (Input::isKeyDown(KEY_A)) {
 		SaveProfile& sv = getGlobalSavedata().getProfile(0);
 		switch(selected) {
-			case 0: if (sv.isValid()) game.setStateWithFade(new SMainGame(game, false), 40); break; // continue
-			case 1: char name[sizeof(SaveProfile)];
-					if (!Input::getString(name, messageGet("msg_chrname"), "", sizeof(name))) break;
-					sv.setUserName(name);
-					commitCurrentSavedata(WorldData());
-					commitGlobalSavedata();
-					game.setStateWithFade(new SMainGame(game, true), 60); break; // new game
-			case 2: game.end(); break; // quit
+			case 0: // continue
+				if (sv.isValid()) game.setStateWithFade(new SMainGame(game, false), 40);
+				break;
+
+			case 1: // new game
+				char name[sizeof(SaveProfile)];
+				if (!Input::getString(name, messageGet("msg_chrname"), "", sizeof(name))) break;
+				sv.setUserName(name);
+				//commitCurrentSavedata(WorldData());
+				//commitGlobalSavedata();
+				game.setStateWithFade(new SMainGame(game, true), 60);
+				break;
+
+			case 2: // quit
+				game.end();
+				break;
 		}
 	}
 }

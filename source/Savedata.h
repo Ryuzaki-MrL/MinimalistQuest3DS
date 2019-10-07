@@ -28,17 +28,19 @@ class SaveData {
 	SaveSystem sys;
 
   public:
-	SaveData(const char* filename);
+	SaveData();
 	~SaveData();
 
 	inline SaveProfile& getProfile(uint8_t p) { return profiles[p]; }
 	inline SaveSystem& getSystemData() { return sys; }
 
+	bool load(const char* filename);
 	bool commit(const char* filename) const;
 	void clear();
 };
 
 SaveData& getGlobalSavedata();
+bool loadGlobalSavedata();
 bool commitGlobalSavedata();
 const SaveProfile& currentSaveProfile();
 void selectSaveProfile(uint8_t slot);
