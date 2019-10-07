@@ -13,11 +13,8 @@
 #define MAX_KEYS		8
 
 struct PlayerData {
-	uint16_t exp = 0;
-	uint8_t lvl = 1;
 	uint8_t chp = 10;
 	uint8_t mhp = 10;
-	uint8_t def = 0;
 	uint8_t x = 0;
 	uint8_t y = 0;
 };
@@ -26,11 +23,11 @@ struct InventoryData {
   private:
 	uint8_t weaponlvl[WEAPON_COUNT];
 	uint8_t inventory[ITEM_COUNT];
-	uint8_t keys : 4;
-	uint8_t friends : 4;
+	uint8_t keys;
+	uint8_t friends;
   public:
-	uint8_t curweapon : 4;
-	uint8_t curitem : 4;
+	uint8_t curweapon;
+	uint8_t curitem;
 
 	inline void addKey() { if (keys < MAX_KEYS) ++keys; }
 	inline bool useKey() { return (keys > 0) ? (keys--) : (false); }
@@ -38,6 +35,7 @@ struct InventoryData {
 
 	inline void addFriend(uint8_t id) { friends |= (1 << id); }
 	inline bool hasFriend(uint8_t id) const { return (friends >> id) & 1; }
+	inline uint8_t countFriends() const { return __builtin_popcount(friends); }
 
 	inline void addItem(size_t id) { if (inventory[id] < 99) ++inventory[id]; }
 	inline bool useItem(size_t id) { return (inventory[id] > 0) ? (inventory[id]--) : (false); }

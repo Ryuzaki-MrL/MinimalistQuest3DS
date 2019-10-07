@@ -2,6 +2,7 @@
 
 #include "STitleScreen.h"
 #include "SMainGame.h"
+#include "SGameOver.h"
 #include "Input.h"
 #include "SaveData.h"
 #include "Textbox.h"
@@ -13,7 +14,7 @@
 static uint8_t MSG_MENU_IDX, MSG_WEAPON, MSG_ITEM, MSG_PAUSE;
 
 SMainGame::SMainGame(Game& game, bool newgame): GameState(game), screen(0), paused(false) {
-	MSG_MENU_IDX = messageGetIndex("msg_map");
+	MSG_MENU_IDX = messageGetIndex("msg_tab00");
 	MSG_WEAPON = messageGetIndex("msg_weapon");
 	MSG_ITEM = messageGetIndex("msg_item");
 	MSG_PAUSE = messageGetIndex("msg_pause");
@@ -44,7 +45,13 @@ static void updateInventoryScreen(InventoryData& inv) {
 }
 
 void SMainGame::update() {
-	if (!getTextbox().update()) {
+	if (level.checkFlag(LFLAG_GAMEOVER)) {
+		game.setStateWithFade(
+			new SGameOver(game, level.checkFlag(LFLAG_ENDGAME), std::max(0, level.getWorldData().inv.countFriends()-1)),
+			60 /* fade time */
+		);
+	}
+	else if (!getTextbox().update()) {
 		if (Input::isKeyDown(KEY_START)) {
 			paused = !paused;
 		}
@@ -52,10 +59,12 @@ void SMainGame::update() {
 			if (Input::isKeyDown(KEY_SELECT)) {
 				game.setState(new STitleScreen(game));
 			}
-		} else {
+		}
+		else {
 			level.update();
 		}
 	}
+
 	if (Input::isKeyDown(KEY_TOUCH)) {
 		const Rectangle tbox = getTouchArea();
 		for (uint8_t i = 0; i < 3; ++i) {
