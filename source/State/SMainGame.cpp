@@ -8,6 +8,8 @@
 #include "Message.h"
 #include "Sprite.h"
 
+#define INV_XSEP 64
+
 static uint8_t MSG_MENU_IDX, MSG_WEAPON, MSG_ITEM, MSG_PAUSE;
 
 SMainGame::SMainGame(Game& game, bool newgame): GameState(game), screen(0), paused(false) {
@@ -30,12 +32,12 @@ static inline const Rectangle getTouchArea() {
 static void updateInventoryScreen(InventoryData& inv) {
 	const Rectangle tbox = getTouchArea();
 	for (int i = 0; i < WEAPON_COUNT; ++i) {
-		if (tbox.collideWith(Rectangle(i*80+20, i*80+60, 120, 120+40))) {
+		if (tbox.collideWith(Rectangle(i*INV_XSEP+20, i*INV_XSEP+20+40, 120, 120+40))) {
 			inv.curweapon = i; break;
 		}
 	}
 	for (int i = 0; i < ITEM_COUNT; ++i) {
-		if (tbox.collideWith(Rectangle(i*80+20, i*80+60, 192, 192+40))) {
+		if (tbox.collideWith(Rectangle(i*INV_XSEP+20, i*INV_XSEP+20+40, 192, 192+40))) {
 			inv.curitem = i; break;
 		}
 	}
@@ -70,8 +72,8 @@ void SMainGame::update() {
 void SMainGame::drawTop(Renderer& render) {
 	level.draw(render);
 	if (paused) {
-		render.drawRectangle(0, 0, 400, 240, RGBA8(0,0,0,0x7F));
-		render.drawText(FNT_ARIAL9, 200, 120, 1.0f, C_WHITE, true, messageGet(MSG_PAUSE));
+		render.drawRectangle(0, 0, 400, 240, RGBA8(0,0,0,0xCF));
+		render.drawText(FNT_ARIAL9, 200, 120, 1.0f, C_WHITE, ALIGN_CENTER, messageGet(MSG_PAUSE));
 	}
 }
 
@@ -79,11 +81,11 @@ static void drawMapScreen(const Level& level, Renderer& render) {
 	const MapData& mp = level.getWorldData().map;
 	if (!mp.hasmap) {
 		render.drawRectangle(51, 89, 217, 144, C_BLACK);
-		render.drawText(FNT_SQUARE, 160, 144, 1.0f, C_WHITE, true, messageGet("msg_nomap"));
+		render.drawText(FNT_SQUARE, 160, 144, 1.0f, C_WHITE, ALIGN_CENTER, messageGet("msg_nomap"));
 		return;
 	}
 	render.drawTexture(TEX_MAP, 51, 89);
-	render.drawTextFormat(FNT_SQUARE, 52, 90, 1.0f, C_WHITE, false, "%d%%", (mp.countVisited() * 100) / level.getSectionCount());
+	render.drawTextFormat(FNT_SQUARE, 52, 90, 1.0f, C_WHITE, ALIGN_LEFT, "%d%%", (mp.countVisited() * 100) / level.getSectionCount());
 	for (size_t i = 0; i < SECTION_COUNT; ++i) {
 		if (mp.isVisited(i)) {
 			render.drawRectangle(51+24*(i%9), 124+18*(i/9), 24, 18, RGBA8(0xFF,0,0,0x6F));
@@ -94,9 +96,8 @@ static void drawMapScreen(const Level& level, Renderer& render) {
 }
 
 static void drawControlScreen(Renderer& render, const Level& level, const Game& game) {
-	//render.drawText(FNT_DEFAULT, 160, 96, 0.75f, C_BLACK, true, messageGet("msg_chelp"));
 	u32 memuse = 33554432 - linearSpaceFree();
-	render.drawTextFormat(FNT_DEFAULT, 160, 88, 0.5f, RGBA8(0xFF,0,0,0xFF), true,
+	render.drawTextFormat(FNT_DEFAULT, 160, 88, 0.5f, RGBA8(0xFF,0,0,0xFF), ALIGN_CENTER,
 		"MEM: %u (%.2f%%)\n"
 		"FPS: %.2f\n"
 		"Obj: %u / Active: %u\n",
@@ -104,20 +105,21 @@ static void drawControlScreen(Renderer& render, const Level& level, const Game& 
 		game.getFPS(),
 		level.instanceCount(), level.countActive()
 	);
+	render.drawText(FNT_DEFAULT, 160, 134, 0.6f, C_BLACK, ALIGN_CENTER, messageGet("msg_chelp"));
 }
 
 static void drawInventoryScreen(const InventoryData& inv, Renderer& render) {
-	render.drawText(FNT_DEFAULT, 8, 96, 0.75f, C_BLACK, false, messageGet(MSG_WEAPON));
+	render.drawText(FNT_DEFAULT, 8, 96, 0.75f, C_BLACK, ALIGN_LEFT, messageGet(MSG_WEAPON));
 	for (int i = 0; i < WEAPON_COUNT; ++i) {
-		render.drawRectangle(i*80+20, 120, 40, 40, RGBA8(0xFF*(inv.curweapon==i),0,0,0xFF));
-		render.drawRectangle(i*80+24, 124, 32, 32, C_WHITE);
-		render.drawSprite(spriteGetTexture(SPR_WEAPONS, i), i*80+32, 132);
+		render.drawRectangle(i*INV_XSEP+20, 120, 40, 40, RGBA8(0xFF*(inv.curweapon==i),0,0,0xFF));
+		render.drawRectangle(i*INV_XSEP+22, 122, 36, 36, C_WHITE);
+		render.drawSprite(spriteGetTexture(SPR_WEAPONS, i), i*INV_XSEP+32, 132);
 	}
-	render.drawText(FNT_DEFAULT, 8, 168, 0.75f, C_BLACK, false, messageGet(MSG_ITEM));
+	render.drawText(FNT_DEFAULT, 8, 168, 0.75f, C_BLACK, ALIGN_LEFT, messageGet(MSG_ITEM));
 	for (int i = 0; i < ITEM_COUNT; ++i) {
-		render.drawRectangle(i*80+20, 192, 40, 40, RGBA8(0xFF*(inv.curitem==i),0,0,0xFF));
-		render.drawRectangle(i*80+24, 196, 32, 32, C_WHITE);
-		render.drawSprite(spriteGetTexture(SPR_ITEMS, i), i*80+32, 204);
+		render.drawRectangle(i*INV_XSEP+20, 192, 40, 40, RGBA8(0xFF*(inv.curitem==i),0,0,0xFF));
+		render.drawRectangle(i*INV_XSEP+22, 194, 36, 36, C_WHITE);
+		render.drawSprite(spriteGetTexture(SPR_ITEMS, i), i*INV_XSEP+32, 204);
 	}
 }
 
@@ -127,7 +129,7 @@ void SMainGame::drawBottom(Renderer& render) {
 	const WorldData& wd = level.getWorldData();
 	for (uint8_t i = 0; i < 3; ++i) {
 		render.drawRectangle(5+i*107, 53, 96, 32, RGBA8(0xFF*(screen==i),0,0,0xFF));
-		render.drawText(FNT_SQUARE, 5+48+i*107, 62, 1.0f, C_WHITE, true, messageGet(MSG_MENU_IDX + i));
+		render.drawText(FNT_SQUARE, 5+48+i*107, 62, 1.0f, C_WHITE, ALIGN_CENTER, messageGet(MSG_MENU_IDX + i));
 	}
 	switch(screen) {
 		case 0: drawMapScreen(level, render); break;
@@ -145,17 +147,17 @@ void SMainGame::drawBottom(Renderer& render) {
 	for (uint8_t i = 0; i < chp && i < mhp; ++i) hpbuf[i] = '|';
 	for (uint8_t i = chp; i < mhp; ++i) hpbuf[i] = '\'';
 	hpbuf[mhp] = 0;
-	render.drawTextFormat(FNT_SQUARE, 0,  0, 1.0f, C_BLACK, false, "%s\nHP: [%s]", currentSaveProfile().getUserName(), hpbuf);
+	render.drawTextFormat(FNT_SQUARE, 0,  0, 1.0f, C_BLACK, ALIGN_LEFT, "%s\nHP: [%s]", currentSaveProfile().getUserName(), hpbuf);
 	for (uint8_t i = 0; i < wd.inv.countKeys(); ++i) {
 		render.drawSprite(spriteGetTexture(SPR_KEY), i<<4, 32);
 	}
 	for (uint8_t i = 0; i < FRIEND_COUNT; ++i) {
 		if (wd.inv.hasFriend(i)) render.drawSprite(spriteGetTexture(SPR_PLAYER, i), 240 + (i<<4), 32);
 	}
-	render.drawText(FNT_SQUARE, 144,  0, 1.0f, C_BLACK, false, messageGet(MSG_WEAPON));
+	render.drawText(FNT_SQUARE, 144,  0, 1.0f, C_BLACK, ALIGN_LEFT, messageGet(MSG_WEAPON));
 	render.drawSprite(spriteGetTexture(SPR_WEAPONS, wd.inv.curweapon), 145, 15);
-	render.drawTextFormat(FNT_SQUARE, 164, 16, 1.0f, C_BLACK, false, "Lv.%d", wd.inv.getWeapon(wd.inv.curweapon));
-	render.drawText(FNT_SQUARE, 240,  0, 1.0f, C_BLACK, false, messageGet(MSG_ITEM));
+	render.drawTextFormat(FNT_SQUARE, 164, 16, 1.0f, C_BLACK, ALIGN_LEFT, "Lv.%d", wd.inv.getWeapon(wd.inv.curweapon));
+	render.drawText(FNT_SQUARE, 240,  0, 1.0f, C_BLACK, ALIGN_LEFT, messageGet(MSG_ITEM));
 	render.drawSprite(spriteGetTexture(SPR_ITEMS, wd.inv.curitem), 241, 15);
-	render.drawTextFormat(FNT_SQUARE, 260, 16, 1.0f, C_BLACK, false, "x%d", wd.inv.countItem(wd.inv.curitem));
+	render.drawTextFormat(FNT_SQUARE, 260, 16, 1.0f, C_BLACK, ALIGN_LEFT, "x%d", wd.inv.countItem(wd.inv.curitem));
 }

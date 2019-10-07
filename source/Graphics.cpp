@@ -143,30 +143,34 @@ void Renderer::drawTextureFill(Texture id) {
 	}
 }
 
-void Renderer::drawText(Font font, float x, float y, float size, u32 color, bool center, const char* str) {
+void Renderer::drawText(Font font, float x, float y, float size, u32 color, u8 align, const char* str) {
 	if (!fonts[font]) {
-		float w;
-		if (!txtready.count(str)) cacheTextForRendering(str);
+		float w, xx;
+		if (!txtready.count(str)) {
+			cacheTextForRendering(str);
+		}
 		C2D_TextGetDimensions(&txtready[str], size, size, &w, nullptr);
-		C2D_DrawText(&txtready[str], C2D_WithColor, center ? (x - (w/2)) : x, y, 0.0f, size, size, color);
+		xx = x - w * (align / 2.0);
+		C2D_DrawText(&txtready[str], C2D_WithColor, xx - tx, y - ty, 0.0f, size, size, color);
 	} else {
-		RZFT_DrawText(fonts[font], x - tx, y - ty, size, size, color, SUBSCREEN_WIDTH, center, str);
+		RZFT_DrawText(fonts[font], x - tx, y - ty, size, size, color, SUBSCREEN_WIDTH, align, str);
 	}
 }
 
-void Renderer::drawTextFormat(Font font, float x, float y, float size, u32 color, bool center, const char* str, ...) {
+void Renderer::drawTextFormat(Font font, float x, float y, float size, u32 color, u8 align, const char* str, ...) {
 	static char buffer[256] = "";
 	va_list args;
 	va_start(args, str);
 	vsnprintf(buffer, sizeof(buffer) - 1, str, args);
 	if (!fonts[font]) {
-		float w;
+		float w, xx;
 		C2D_Text tmp;
 		C2D_TextParse(&tmp, internalbuf, buffer);
 		C2D_TextGetDimensions(&tmp, size, size, &w, nullptr);
-		C2D_DrawText(&tmp, C2D_WithColor, center ? (x - (w/2)) : x, y, 0.0f, size, size, color);
+		xx = x - w * (align / 2.0);
+		C2D_DrawText(&tmp, C2D_WithColor, xx - tx, y - ty, 0.0f, size, size, color);
 	} else {
-		RZFT_DrawText(fonts[font], x - tx, y - ty, size, size, color, SUBSCREEN_WIDTH, center, buffer);
+		RZFT_DrawText(fonts[font], x - tx, y - ty, size, size, color, SUBSCREEN_WIDTH, align, buffer);
 	}
 	va_end(args);
 }

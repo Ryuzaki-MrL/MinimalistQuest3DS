@@ -11,7 +11,7 @@ void RZFT_FreeFont(RZFT_Font* font);
 
 float RZFT_GetTextWidth(const RZFT_Font* font, float scale, const char* text);
 
-void RZFT_DrawText(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, uint32_t color, int wrapX, int center, const char* text);
-void RZFT_DrawTextFormat(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, uint32_t color, int wrapX, int center, const char* text, ...);
+void RZFT_DrawText(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, uint32_t color, int wrapX, uint8_t align, const char* text);
+void RZFT_DrawTextFormat(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, uint32_t color, int wrapX, uint8_t align, const char* text, ...);
 
 #endif /* RZFT_H */

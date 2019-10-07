@@ -55,12 +55,12 @@ void RZFT_FreeFont(RZFT_Font* font) {
 	linearFree(font);
 }
 
-float RZFT_GetTextWidth(const RZFT_Font* font, float scale, const char* text) {
+float RZFT_GetTextWidth(const RZFT_Font* font, float scale, const char* text, char stop) {
 	float w = 0, mw = 0;
 	while(*text) {
 		u32 c;
 		int units = decode_utf8(&c, (const u8*)text);
-		if (units == -1) break;
+		if (units == -1 || c == stop) break;
 		text += units;
 		if (c == '\n') {
 			if (w > mw) mw = w;
@@ -98,12 +98,9 @@ static void RZFT_WordWrap(const RZFT_Font* font, float scale, int wrap, char* te
 	}
 }
 
-static void RZFT_DrawTextInternal(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, int center, const char* text) {
-	// TODO: center text line by line (calculate individual width for each line)
-	if (center) {
-		x -= ((int)RZFT_GetTextWidth(font, scaleX, text) >> 1);
-	}
-	int xx = x, yy = y;
+static void RZFT_DrawTextInternal(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, u8 align, const char* text) {
+	int xx = x - (RZFT_GetTextWidth(font, scaleX, text, '\n') * (align / 2.0));
+	int yy = y;
 	C2D_ImageTint tint;
 	C2D_PlainImageTint(&tint, color, 1.0f);
 	while(*text) {
@@ -113,7 +110,7 @@ static void RZFT_DrawTextInternal(const RZFT_Font* font, float x, float y, float
 		text += units;
 		if (c == '\n') {
 			yy += font->hdr.lineHeight * scaleY;
-			xx = x;
+			xx = x - (RZFT_GetTextWidth(font, scaleX, text, '\n') * (align / 2.0));
 			continue;
 		}
 		rzftChar chr = font->pages[c >> 8].chr[c & 0xFF];
@@ -122,23 +119,23 @@ static void RZFT_DrawTextInternal(const RZFT_Font* font, float x, float y, float
 	}
 }
 
-void RZFT_DrawText(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, int wrapX, int center, const char* text) {
+void RZFT_DrawText(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, int wrapX, u8 align, const char* text) {
 	static char buffer[256] = "";
-	if (wrapX >= 0) {
+	if (wrapX > 0) {
 		strncpy(buffer, text, sizeof(buffer) - 1);
 		RZFT_WordWrap(font, scaleX, wrapX, buffer);
-		RZFT_DrawTextInternal(font, x, y, scaleX, scaleY, color, center, buffer);
+		RZFT_DrawTextInternal(font, x, y, scaleX, scaleY, color, align, buffer);
 	} else {
-		RZFT_DrawTextInternal(font, x, y, scaleX, scaleY, color, center, text);
+		RZFT_DrawTextInternal(font, x, y, scaleX, scaleY, color, align, text);
 	}
 }
 
-void RZFT_DrawTextFormat(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, int wrapX, int center, const char* text, ...) {
+void RZFT_DrawTextFormat(const RZFT_Font* font, float x, float y, float scaleX, float scaleY, u32 color, int wrapX, u8 align, const char* text, ...) {
 	static char buffer[256] = "";
 	va_list args;
 	va_start(args, text);
 	vsnprintf(buffer, sizeof(buffer) - 1, text, args);
-	RZFT_WordWrap(font, scaleX, wrapX, buffer);
-	RZFT_DrawTextInternal(font, x, y, scaleX, scaleY, color, center, buffer);
+	if (wrapX > 0) RZFT_WordWrap(font, scaleX, wrapX, buffer);
+	RZFT_DrawTextInternal(font, x, y, scaleX, scaleY, color, align, buffer);
 	va_end(args);
 }

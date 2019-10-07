@@ -9,6 +9,10 @@
 #define C_BLACK RGBA8(0,0,0,0xFF)
 #define C_WHITE RGBA8(0xFF,0xFF,0xFF,0xFF)
 
+#define ALIGN_LEFT   0
+#define ALIGN_CENTER 1
+#define ALIGN_RIGHT  2
+
 enum Texture: uint8_t {
 	TEX_BACKGROUND, TEX_MAP,
 	MAX_TEXTURE
@@ -52,8 +56,8 @@ class Renderer {
 	void drawTextureColor(Texture id, int x, int y, u32 color, float blend);
 	void drawTextureFill(Texture id);
 
-	void drawText(Font font, float x, float y, float size, u32 color, bool center, const char* str);
-	void drawTextFormat(Font font, float x, float y, float size, u32 color, bool center, const char* str, ...);
+	void drawText(Font font, float x, float y, float size, u32 color, u8 align, const char* str);
+	void drawTextFormat(Font font, float x, float y, float size, u32 color, u8 align, const char* str, ...);
 };
 
 #endif /* GRAPHICS_H */
