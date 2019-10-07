@@ -1,11 +1,9 @@
 #include "OSword.h"
 #include "Level.h"
 
-#define invdata	level.getWorldData().inv
-
 OSword::OSword(Level& level, EntityType type): GameEntity(level, type) {
 	mv.speed = curstats.spd;
-	tmc.limit = (16 / mv.speed) + 1; // TODO: use sprite width here
+	tmc.limit = (16 / mv.speed) + 1;
 }
 OSword::~OSword() {}
 

@@ -41,7 +41,6 @@ void GameEntity::serialize(FILE* out) const {
 	fwrite(&group, 1, sizeof(group), out);
 	if (hasProperty(PROPERTY_SPRTRSAVE)) fwrite(&spr.tr, 1, sizeof(spr.tr), out);
 	if (hasComponent(COMPONENT_SPRITE)) fwrite(&spr.color, 1, sizeof(spr.color) + sizeof(spr.sprite), out);
-	if (hasComponent(COMPONENT_STATS)) fwrite(&curstats.lvl, 1, sizeof(curstats.lvl), out);
 	if (hasComponent(COMPONENT_FLAG)) fwrite(&flg, 1, sizeof(flg), out);
 	if (hasComponent(COMPONENT_LOOT)) fwrite(&loot, 1, sizeof(loot), out);
 	if (hasComponent(COMPONENT_PATH)) fwrite(&path.type, 1, sizeof(path.type), out);

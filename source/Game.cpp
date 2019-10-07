@@ -24,8 +24,12 @@ Game::~Game() {
 void Game::update() {
 	if (transition) {
 		switch(fadeStatus()) {
-			case FADE_HALFDONE: setState(tmpstate); break;
-			case FADE_DONE: transition = false; break;
+			case FADE_HALFDONE:
+				if (state != tmpstate) setState(tmpstate);
+				break;
+			case FADE_DONE:
+				transition = false;
+				break;
 		}
 	} else {
 		Input::update();

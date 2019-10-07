@@ -2,8 +2,6 @@
 #include "Level.h"
 #include "defs.h"
 
-#define invdata	level.getWorldData().inv
-
 OBoomerang::OBoomerang(Level& level, EntityType type): GameEntity(level, type) {
 	mv.speed = level.getPlayer().getStats().spd * 1.25;
 }

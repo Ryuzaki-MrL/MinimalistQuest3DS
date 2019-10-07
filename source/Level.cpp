@@ -137,7 +137,7 @@ const GameEntity* Level::checkObject(const Rectangle& bbox, size_t except, uint1
 		return &player;
 	}
 	for (size_t i : pool.getActiveList()) {
-		if (pool[i]->getUID()!=except && pool[i]->collideWith(bbox) && pool[i]->hasProperty(props)) {
+		if (pool[i]->getUID()!=except && pool[i]->spr.sprite && pool[i]->collideWith(bbox) && pool[i]->hasProperty(props)) {
 			return pool[i];
 		}
 	}

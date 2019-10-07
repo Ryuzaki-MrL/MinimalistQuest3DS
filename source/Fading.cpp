@@ -30,7 +30,8 @@ void fadeUpdate(Renderer& render) {
 }
 
 int fadeStatus() {
-	if (ctx.counter >= ctx.steps) return FADE_HALFDONE;
 	if (ctx.done) return FADE_DONE;
+	if (ctx.halfdone) return FADE_HALFDONE;
+	//if (ctx.counter >= ctx.steps) return FADE_HALFDONE;
 	return FADE_RUNNING;
 }
