@@ -55,10 +55,10 @@ void PathComponent::update(GameEntity& ent, const Level& lv) {
 		}
 
 		case PATH_MIMIC: { // mimic input (reverse)
-			if (Input::isKeyHeld(KEY_LEFT))  ent.move(st.spd,0); else
-			if (Input::isKeyHeld(KEY_RIGHT)) ent.move(-st.spd,0);
-			if (Input::isKeyHeld(KEY_UP)) 	  ent.move(0,st.spd); else
-			if (Input::isKeyHeld(KEY_DOWN))  ent.move(0,-st.spd);
+			if (Input::isKeyHeld(KEY_LEFT))  ent.move(+st.spd, 0); else
+			if (Input::isKeyHeld(KEY_RIGHT)) ent.move(-st.spd, 0);
+			if (Input::isKeyHeld(KEY_UP))    ent.move(0, +st.spd); else
+			if (Input::isKeyHeld(KEY_DOWN))  ent.move(0, -st.spd);
 			break;
 		}
 

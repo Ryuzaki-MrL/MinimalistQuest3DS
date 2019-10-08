@@ -14,8 +14,8 @@ void OEnemy::onMove() {
 
 void OEnemy::onKill() {
 	if (type == OBJ_CHESTCRAB) {
-		int xx = ((int(getX()) - 8) / 16) * 16;
-		int yy = ((int(getY()) - 0) / 16) * 16;
+		int xx = ((int(getX()) + 8) / 16) * 16;
+		int yy = ((int(getY()) + 4) / 16) * 16;
 		GameEntity* ch = level.instanceCreate(xx, yy, OBJ_CHEST);
 		if (ch) {
 			ch->flg = flg;
