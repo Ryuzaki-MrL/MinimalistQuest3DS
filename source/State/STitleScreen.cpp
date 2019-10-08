@@ -47,22 +47,12 @@ void STitleScreen::update() {
 }
 
 void STitleScreen::drawTop(Renderer& render) {
-	static uint8_t sblend = 0;
-	static bool revblend = false;
-	const uint8_t incb = 10 / (1 + (render.get3D() != 0.0));
-	if (revblend) {
-		sblend -= incb;
-		if (sblend <= 50) revblend = false;
-	} else {
-		sblend += incb;
-		if (sblend >= 250) revblend = true;
-	}
 	render.screenClear(C_WHITE);
-	//render.screenTranslate(render.get3D(), 0);
-	//render.drawTexture(TEX_LOGO, 64, 48); // TODO: draw logo
+	render.screenTranslate(-render.get3D(), 0);
+	render.drawTexture(TEX_LOGO, 40, 32);
 	render.screenTranslate(render.get3D(), 0);
 	for (int i = 0; i < OPT_COUNT; ++i) {
-		render.drawText(FNT_SQUARE, 200, 160+i*20, 1.0f, (selected==i) ? RGBA8(sblend,0,0,0xFF) : C_BLACK, ALIGN_CENTER, messageGet(MSG_MENU_IDX + i));
+		render.drawText(FNT_SQUARE, 200, 148+i*20, 1.0f, (selected==i) ? RGBA8(0xFF,0,0,0xFF) : C_BLACK, ALIGN_CENTER, messageGet(MSG_MENU_IDX + i));
 	}
 	render.screenTranslate(-render.get3D(), 0);
 	render.drawText(FNT_DEFAULT, 0, 240-16, 0.5f, C_BLACK, ALIGN_LEFT, COPY_INFO);

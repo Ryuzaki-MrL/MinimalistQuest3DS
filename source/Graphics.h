@@ -14,7 +14,7 @@
 #define ALIGN_RIGHT  2
 
 enum Texture: uint8_t {
-	TEX_BACKGROUND, TEX_MAP,
+	TEX_BACKGROUND, TEX_MAP, TEX_LOGO,
 	MAX_TEXTURE
 };
 
