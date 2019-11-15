@@ -12,7 +12,7 @@ void OWall::onKill() {
 void OWall::onLoad() {
 	if (flg.isMarked(level)) {
 		kill();
-	} else if (group >= 128) {
+	} else if (group >= 128 && group <= 144) {
 		spr.setSprite((group & 1) ? SPR_NONE : SPR_WALL);
 	}
 }

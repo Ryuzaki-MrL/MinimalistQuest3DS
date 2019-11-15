@@ -31,7 +31,7 @@ SGameOver::SGameOver(Game& game, bool endgame, uint8_t friends): GameState(game)
 			messageGet("msg_choice")
 		);
 	}
-	s_lines = 0;
+	s_lines = 1;
 	for (int i = 0; s_endmsg[i]; ++i) {
 		if (s_endmsg[i] == '\n') ++s_lines;
 	}
@@ -49,7 +49,7 @@ void SGameOver::update() {
 
 void SGameOver::drawTop(Renderer& render) {
 	render.screenClear(C_BLACK);
-	render.drawText(FNT_SQUARE, 200, 120 - s_lines*FONT_HEIGHT/2, 1.0f, C_WHITE, ALIGN_CENTER, s_endmsg);
+	render.drawText(FNT_SQUARE, 200, 120 - (s_lines*FONT_HEIGHT)/2, 1.0f, C_WHITE, ALIGN_CENTER, s_endmsg);
 }
 
 void SGameOver::drawBottom(Renderer& render) {

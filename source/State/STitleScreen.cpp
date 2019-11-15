@@ -23,6 +23,10 @@ void STitleScreen::update() {
 		selected = (selected - 1 + OPT_COUNT) % OPT_COUNT;
 	}
 
+	if (Input::isKeyDown(KEY_SELECT)) {
+		messageSetLang(messageGetLang() + 1);
+	}
+
 	if (Input::isKeyDown(KEY_A)) {
 		SaveProfile& sv = getGlobalSavedata().getProfile(0);
 		switch(selected) {
@@ -57,23 +61,7 @@ void STitleScreen::drawTop(Renderer& render) {
 	render.screenTranslate(-render.get3D(), 0);
 	render.drawText(FNT_DEFAULT, 0, 240-16, 0.5f, C_BLACK, ALIGN_LEFT, COPY_INFO);
 }
-/*
-static void drawContinueScreen(Renderer& render, const SaveData& sv) {
-	if (!sv.isValid()) {
-		render.drawText(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, MSG_CONTINUE_NOSAVE);
-	} else {
-		render.drawTextFormat(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, messageGet(MSG_CONTINUE_DESC), sv.getUserName());
-	}
-}
 
-static void drawNewGameScreen(Renderer& render) {
-	render.drawText(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, MSG_NEWGAME_DESC);
-}
-
-static void drawGameQuitScreen(Renderer& render) {
-	render.drawText(FNT_DEFAULT, 0, 0, 0.6f, C_WHITE, false, MSG_QUITGAME_DESC);
-}
-*/
 void STitleScreen::drawBottom(Renderer& render) {
 	// TODO: bottom screen artwork for each option
 	render.screenClear(C_WHITE);

@@ -54,15 +54,11 @@ bool Level::load(const char* filename) {
 
 	EntityType oid;
 	fread(&sz, 1, sizeof(sz), lvl);
-	//FILE* flog = fopen("log.txt", "w");
 	for (size_t i = 0; i < sz; ++i) {
-		//EntityType prev = oid; // TODO: remove this
 		fread(&oid, 1, sizeof(EntityType), lvl);
 		GameEntity* ob = pool.create(oid, *this);
 		if (ob) ob->deserialize(lvl);
-		//else fprintf(flog, "failed to create obj %u, at filepos: %lu, previous: %u.\n", oid, ftell(lvl), prev);
 	}
-	//fclose(flog);
 
 	new(&player) OPlayer(*this);
 	player.setPosition(

@@ -5,7 +5,7 @@
 
 typedef std::unordered_map<std::string, uint8_t> MsgDict;
 
-static uint8_t lang = LANG_EN;
+static uint8_t lang = 0;
 static RZDB_Chunk* langs = nullptr;
 static RZDB_Chunk* msgentries = nullptr;
 static RZDB_Chunk* messages = nullptr;
@@ -49,5 +49,5 @@ const char* messageGetLangStr() {
 }
 
 uint8_t messageGetIndex(const std::string& id) {
-	return msgmap[lang][id];
+	return msgmap[0][id];
 }

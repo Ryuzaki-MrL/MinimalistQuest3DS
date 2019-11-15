@@ -4,6 +4,7 @@
 #include "Message.h"
 
 OPopup::OPopup(Level& level, EntityType type): GameEntity(level, type) {
+	spr.color.rgba = 0xFF000000;
 	mv.speed = 2;
 	mv.direction = 90;
 }

@@ -9,7 +9,8 @@ OChest::~OChest() {}
 void OChest::onInteract(GameEntity& other) {
 	if (flg.isMarked(level)) return;
 	if (!loot.locked || level.getWorldData().inv.useKey()) {
-		level.instanceCreate(other.getX(), other.getY(), EntityType(loot.type));
+		GameEntity* ent = level.instanceCreate(other.getX(), other.getY(), EntityType(loot.type));
+		if (ent && ent->getType() == OBJ_FRIEND) ent->loot.type = 2;
 		uint8_t msgitem = messageGetIndex("msg_item00") + loot.type;
 		textboxCreateFormat(messageGet("msg_gotitem"), messageGet(msgitem));
 		flg.mark(level); spr.frame = 1;
