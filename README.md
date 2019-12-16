@@ -8,7 +8,7 @@ This game was originally made for the Minimalistic Jam 2 on itch.io
 and is now being ported to the Nintendo 3DS under my personal
 game engine (currently outdated).
 
-Requires devkitARM and libctru to build.
+Requires devkitARM, libctru and citro2d to build.
 
 The tools for messing around with the data files are available [here](https://github.com/Ryuzaki-MrL/MinimalistTools).
 
